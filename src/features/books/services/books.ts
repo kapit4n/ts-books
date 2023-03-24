@@ -1,28 +1,28 @@
 import CRUDService from '../../../services/CRUDService.interface';
+import { IBook } from '../../../@types/book';
+import Fetch from '../../../lib/fetch';
 
-export default class BooksService implements CRUDService<string> {
+export default class BooksService implements CRUDService<IBook> {
   url = "http://locahost:7000/api"
+  fetcher = new Fetch<IBook>("books")
 
-  getAll() {
-    return ""
+  async getAll(): Promise<IBook[]> {
+    return await this.fetcher.get()
   }
 
-  getById(id: number): string {
-    return ""
+  async getById(id: number): Promise<IBook> {
+    return await this.fetcher.getById(id)
   }
 
-  save(book: string): string {
-    return "saved"
+  async save(book: IBook): Promise<IBook> {
+    return await this.fetcher.post(book)
   }
   
-  update(id: number, book: string): string {
-    return "updated"
+  async update(id: number, book: IBook): Promise<IBook> {
+    return await this.fetcher.put(id, book)
   }
 
   delete(id: number): void {
     
-  }
-
-
-  
+  }  
 }

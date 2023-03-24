@@ -4,7 +4,7 @@ import { UserContext } from './context/userContext';
 import { IUser, ILoginUser } from './@types/user';
 import PageContainer from './layout/PageContainer';
 import Fetch from './lib/fetch'
-import { AxiosResponse } from 'axios'
+import Home from './pages/Home';
 
 function App() {
 
@@ -14,8 +14,8 @@ function App() {
   // fetch the data
   useEffect(() => {
     async function fetchData() {
-      const fetcher: Fetch<IUser> = new Fetch<IUser>()
-      const userResponse = await fetcher.post("auth", loginUser ? {...loginUser}: null)
+      const fetcher: Fetch<IUser> = new Fetch<IUser>("auth")
+      const userResponse = await fetcher.post(loginUser ? { ...loginUser } : null)
       setUser(userResponse)
     }
 
@@ -25,7 +25,9 @@ function App() {
   return (
     <div className="App">
       <UserContext.Provider value={user}>
-        <PageContainer />
+        <PageContainer>
+          <Home />
+        </PageContainer>
       </UserContext.Provider>
     </div>
   );

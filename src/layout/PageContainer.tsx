@@ -1,9 +1,16 @@
-import { useContext } from "react"
-import { UserContext } from "../context/userContext"
+import { FC, ReactNode } from "react"
 
-export default function() {
-
-  const user = useContext(UserContext)
-
-  return <div>{user?.username}</div>
+interface Props {
+  children?: ReactNode
 }
+
+export const PageContainer: FC<Props> = ({ children }) => {
+
+  return (
+    <div>
+      {children}
+    </div>
+  )
+}
+
+export default PageContainer;
