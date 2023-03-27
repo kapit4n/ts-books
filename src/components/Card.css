@@ -1,0 +1,23 @@
+.card {
+  padding: 1rem;
+  border: 1px solid #ccc;
+}
+
+.card-body {
+  font-size: medium;
+}
+
+.card-header {
+  font-size: large;
+}
+
+.card-image {
+  width: 100%;
+  height: 180px;
+  display: flex;
+  justify-content: center;
+}
+
+.card-image img {
+  width: 120px;
+}

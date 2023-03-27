@@ -1,4 +1,6 @@
-import React, { FC, ReactNode } from 'react'
+import { FC, ReactNode } from 'react'
+
+import "./Card.css"
 
 interface CardHeaderProps {
   title: string;
@@ -6,7 +8,7 @@ interface CardHeaderProps {
 
 export const CardHeader: FC<CardHeaderProps> = ({ title }) => {
   return (
-    <div>
+    <div className="card-header">
       {title}
     </div>
   )
@@ -19,8 +21,20 @@ interface CardBodyProps {
 
 export const CardBody: FC<CardBodyProps> = ({ children }) => {
   return (
-    <div>
+    <div className="card-body">
       {children}
+    </div>
+  )
+}
+
+interface CardImageProps {
+  img: string;
+}
+
+export const CardImage: FC<CardImageProps> = ({ img }) => {
+  return (
+    <div className="card-image">
+      <img src={img}/>
     </div>
   )
 }
@@ -31,7 +45,7 @@ interface CardProps {
 
 export const Card: FC<CardProps> = ({ children }) => {
   return (
-    <div>
+    <div className="card">
       {children}
     </div>
   )

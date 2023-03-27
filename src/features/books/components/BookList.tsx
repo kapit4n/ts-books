@@ -1,7 +1,8 @@
 import React, { FC } from 'react'
 
 import { IBook } from '../../../@types/book'
-import { Card, CardBody, CardHeader } from '../../../components/Card'
+import { Card, CardBody, CardHeader, CardImage } from '../../../components/Card'
+import { Grid } from '../../../components/Grid'
 
 
 interface BookListProps {
@@ -10,9 +11,10 @@ interface BookListProps {
 
 export const BookList: FC<BookListProps> = ({ list }) => {
   return (
-    <div>
+    <Grid>
       {list.map((book: IBook) => (
         <Card>
+          <CardImage img={book.image || ""} />
           <CardHeader title={book.name} />
           <CardBody>
             <div>
@@ -21,7 +23,6 @@ export const BookList: FC<BookListProps> = ({ list }) => {
           </CardBody>
         </Card>
       ))}
-
-    </div>
+    </Grid>
   )
 }
