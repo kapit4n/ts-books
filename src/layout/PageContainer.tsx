@@ -1,16 +1,9 @@
-import { FC, ReactNode } from "react"
-
-interface Props {
-  children?: ReactNode
-}
-
-export const PageContainer: FC<Props> = ({ children }) => {
-
+const PageContainer = () => {
   return (
-    <div>
-      {children}
+    <div className="page=container">
+
     </div>
   )
 }
 
-export default PageContainer;
+export default PageContainer

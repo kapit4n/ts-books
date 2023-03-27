@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import './App.css';
 import { UserContext } from './context/userContext';
 import { IUser, ILoginUser } from './@types/user';
-import PageContainer from './layout/PageContainer';
+import PageContainer from './layout/Content';
 import Fetch from './lib/fetch'
 import Home from './pages/Home';
 
