@@ -1,15 +1,17 @@
 import { FC, ReactNode } from 'react'
+import { Link } from "react-router-dom";
 
 import "./Card.css"
 
 interface CardHeaderProps {
   title: string;
+  bookId: number;
 }
 
-export const CardHeader: FC<CardHeaderProps> = ({ title }) => {
+export const CardHeader: FC<CardHeaderProps> = ({ title, bookId }) => {
   return (
     <div className="card-header">
-      {title}
+      <Link to={`/detail/${bookId}`}>{title}</Link>
     </div>
   )
 }

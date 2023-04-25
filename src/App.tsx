@@ -5,6 +5,10 @@ import { IUser, ILoginUser } from './@types/user';
 import PageContainer from './layout/Content';
 import Fetch from './lib/fetch'
 import Home from './pages/Home';
+import BookDetails from './pages/BookDetail';
+import About from './pages/About';
+import Navbar from './layout/Navbar';
+import { Routes, Route } from "react-router-dom";
 
 function App() {
 
@@ -24,9 +28,15 @@ function App() {
 
   return (
     <div className="App">
+      <Navbar />
       <UserContext.Provider value={user}>
         <PageContainer>
-          <Home />
+          <Routes>
+            <Route path="/" element={<Home />} /> 
+            <Route path="/home" element={<Home />} /> 
+            <Route path="/detail/:bookId" element={<BookDetails />} /> 
+            <Route path="/about" element={<About />} /> 
+          </Routes>
         </PageContainer>
       </UserContext.Provider>
     </div>

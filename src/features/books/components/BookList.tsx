@@ -16,8 +16,7 @@ export const BookList: FC<BookListProps> = ({ list }) => {
       {list.map((book: IBook) => (
         <Card>
           <CardImage img={book.image || ""} />
-          
-          <CardHeader title={book.name} />
+          <CardHeader title={book.name} bookId={book.id} />
           <CardBody>
             <div className="star-container">
               <Chip filled />
