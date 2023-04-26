@@ -1,0 +1,41 @@
+.book-details {
+
+}
+
+.book-details-image {
+  width: 300px;
+}
+
+.book-detail-body {
+  display: flex;
+  gap: 2rem;  
+}
+
+.book-details-description {
+  display: flex;
+  flex-direction: column;
+  justify-content: left;
+}
+
+.book-details-description p {
+  display: flex;
+}
+
+.book-detail-logs-item {
+  border: 1px solid black;
+  padding: 1rem;
+}
+.title-and-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.title-and-actions button {
+  height: 2rem;
+}
+
+.book-details-pages {
+  display: flex;
+  gap: 1rem;
+}
