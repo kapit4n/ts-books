@@ -7,7 +7,7 @@ export default class BooksService implements CRUDService<IBook> {
   fetcher = new Fetch<IBook>("books")
 
   async getAll(): Promise<IBook[]> {
-    return await this.fetcher.get()
+    return await this.fetcher.get("")
   }
 
   async getById(id: number): Promise<IBook> {

@@ -8,8 +8,8 @@ export default class Fetch<T> {
     this.url = url;
   }
 
-  get(): Promise<T[]> {
-    return axios.get(`${basicUrl}/${this.url}`).then(response => response.data)
+  get(query: string): Promise<T[]> {
+    return axios.get(`${basicUrl}/${this.url}?${query}`).then(response => response.data)
   }
   getById(id: number): Promise<T> {
     return axios.get(`${basicUrl}/${this.url}/${id}`).then(response => response.data)
