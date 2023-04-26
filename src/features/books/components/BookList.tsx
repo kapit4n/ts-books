@@ -5,12 +5,14 @@ import { Card, CardBody, CardHeader, CardImage } from '../../../components/Card'
 import { Chip } from '../../../components/Chip'
 import { Grid } from '../../../components/Grid'
 import "./BookList.css"
+import ReadingProgressBar from './ReadingProgressbar'
 
 interface BookListProps {
   list: IBook[]
 }
 
 export const BookList: FC<BookListProps> = ({ list }) => {
+
   return (
     <Grid>
       {list.map((book: IBook) => (
@@ -18,6 +20,7 @@ export const BookList: FC<BookListProps> = ({ list }) => {
           <CardImage img={book.image || ""} />
           <CardHeader title={book.name} bookId={book.id} />
           <CardBody>
+            <ReadingProgressBar completed={Number(((book.readPages || 0) / (book.pages || 1)) * 100)} />
             <div className="star-container">
               <Chip filled />
               <Chip filled />

@@ -1,5 +1,7 @@
 .book-details {
-
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .book-details-image {

@@ -5,6 +5,10 @@
 
 .card-body {
   font-size: medium;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem 0;
 }
 
 .card-header {
