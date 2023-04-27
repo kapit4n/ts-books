@@ -21,8 +21,7 @@ export default class BookLogsService implements CRUDService<IBookLog> {
     return {} as IBookLog
   }
   
-
-  delete(id: number): void {
-    
+  async delete(id: number): Promise<void> {
+    return await this.fetcher.delete(id)
   }  
 }

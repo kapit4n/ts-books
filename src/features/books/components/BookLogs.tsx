@@ -1,7 +1,10 @@
+import moment from "moment";
 import { IBookLog } from '../../../@types/bookLog'
 
+import "./BookLogs.css"
 interface BookLogsProps {
-  bookLogs: IBookLog[]
+  bookLogs: IBookLog[];
+  onRemoveBookLog: (bookLogId: number) => void
 }
 
 export default function (props: BookLogsProps) {
@@ -10,16 +13,19 @@ export default function (props: BookLogsProps) {
       {props.bookLogs.map(log => (
         <div className="book-detail-logs-item">
           <div className="book-details-pages">
-            <p>
-              <strong>Read Pages:</strong> {log.readPages}
+            <p className="book-details-read-pages">
+              <strong>Read </strong> <span>{log.readPages}</span> Pages
             </p>
-            <p>
-              <strong>Date:</strong> {log.date?.toString()}
+            <p className="book-details-date">
+              <strong>Date: </strong> {moment(log.date).fromNow()}
             </p>
           </div>
           <p>
-            <strong>Feedback:</strong>{log.feedback}
+            <strong>Feedback: </strong>{log.feedback}
           </p>
+          <div className="actions">
+            <button onClick={() => props.onRemoveBookLog(log.id)}>x</button>
+          </div>
         </div>
       ))}
     </div>

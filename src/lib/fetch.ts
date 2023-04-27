@@ -22,4 +22,8 @@ export default class Fetch<T> {
   put(id: number, data: T | null): Promise<T> {
     return axios.post(`${basicUrl}/${this.url}/${id}`, data).then(response => response.data)
   }
+
+  delete(id: number): Promise<void> {
+    return axios.delete(`${basicUrl}/${this.url}/${id}`).then(response => response.data)
+  }
 }

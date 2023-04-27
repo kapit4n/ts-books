@@ -22,7 +22,7 @@ export default class BooksService implements CRUDService<IBook> {
     return await this.fetcher.put(id, book)
   }
 
-  delete(id: number): void {
-    
+  async delete(id: number): Promise<void> {
+    return await this.fetcher.delete(id)
   }  
 }

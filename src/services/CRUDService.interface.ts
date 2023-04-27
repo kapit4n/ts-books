@@ -7,5 +7,5 @@ export default interface CRUDService<T> {
   getById(id: number): Promise<T>;
   save(data: T): Promise<T>;
   update(id: number, data: T): Promise<T>;
-  delete(id: number): void;
+  delete(id: number): Promise<void>;
 }

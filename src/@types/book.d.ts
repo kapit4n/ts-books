@@ -8,6 +8,8 @@ export interface IBook {
   price?: number;
   pages?: number;
   readPages?: number;
+  lastReadingDate?: date;
+  startReadingDate?: date;
   createdAt?: Date;
   updatedAt?: Date;
 }

@@ -1,0 +1,9 @@
+.book-details-read-pages {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.book-details-date {
+  display: flex;
+  gap: 0.5rem;
+}
