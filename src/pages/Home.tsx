@@ -1,29 +1,23 @@
-import React, { useContext, useState, useEffect } from 'react'
-import { IBook } from '../@types/book'
-import { UserContext } from "../context/userContext"
-import { BookList } from '../features/books/components/BookList'
-import BooksService from '../features/books/services/books'
-import PageContainer from '../layout/Content'
+import React from 'react';
+import { Hero } from '../components/sections/Hero';
+import { Categories } from '../components/sections/Categories';
+import { FeaturedBook } from '../components/sections/FeaturedBook';
+import { ContinueReading } from '../components/sections/ContinueReading';
+import { PopularBooks } from '../components/sections/PopularBooks';
+import { RecentlyUpdated } from '../components/sections/RecentlyUpdated';
+import { WhyTsBooks } from '../components/sections/WhyTsBooks';
+import { featuredBook, continueReading, recentlyUpdated } from '../data/mockData';
 
-export default function () {
-  const user = useContext(UserContext)
-  const [books, setBooks] = useState<IBook[]>([])
-  const bs = new BooksService();
-
-  useEffect(() => {
-    async function getBooks() {
-      bs.getAll().then(books => setBooks(books))    
-    }
-    getBooks()
-  
-  }, [])
-
+export const Home: React.FC = () => {
   return (
-    <div>
-      <div>{user?.username}</div>
-      <PageContainer>
-        <BookList list={books} />
-      </PageContainer>
+    <div className="home">
+      <Hero />
+      <Categories />
+      <FeaturedBook book={featuredBook} />
+      <ContinueReading book={continueReading} />
+      <PopularBooks />
+      <RecentlyUpdated books={recentlyUpdated} />
+      <WhyTsBooks />
     </div>
-  )
-}
+  );
+};

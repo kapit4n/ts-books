@@ -1,0 +1,25 @@
+.section-title {
+  margin-bottom: var(--space-xl);
+}
+
+.section-title-left {
+  text-align: left;
+}
+
+.section-title-center {
+  text-align: center;
+}
+
+.section-title-text {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 var(--space-sm) 0;
+  line-height: 1.2;
+}
+
+.section-title-subtitle {
+  font-size: 1.125rem;
+  color: var(--text-secondary);
+  margin: 0;
+}

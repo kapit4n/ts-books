@@ -1,0 +1,9 @@
+export { Hero } from './Hero';
+export { Categories } from './Categories';
+export { FeaturedBook } from './FeaturedBook';
+export { ContinueReading } from './ContinueReading';
+export { PopularBooks } from './PopularBooks';
+export { RecentlyUpdated } from './RecentlyUpdated';
+export { WhyTsBooks } from './WhyTsBooks';
+export { CategoryCard } from './CategoryCard';
+export { BookCard } from './BookCard';
