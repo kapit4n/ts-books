@@ -75,7 +75,7 @@ export interface ReadingAnalytics {
   avgSessionMinutes: number;
 }
 
-export type ReadingMode = 'standard' | 'focus' | 'study';
+export type ReadingMode = 'standard' | 'book' | 'column' | 'focus';
 
 export type FitMode = 'width' | 'height' | 'actual';
 
@@ -86,6 +86,7 @@ export interface ReaderPreferences {
   fitMode: FitMode;
   theme: ReaderTheme;
   readingMode: ReadingMode;
+  columnSide: 'left' | 'right';
   leftSidebarOpen: boolean;
   rightSidebarOpen: boolean;
   lastPage: number;

@@ -13,9 +13,10 @@ const fitModes: { value: FitMode; label: string }[] = [
 ];
 
 const readingModes: { value: ReadingMode; label: string; desc: string }[] = [
-  { value: 'standard', label: 'Standard', desc: 'Sidebars follow your preference' },
+  { value: 'standard', label: 'Standard', desc: 'Single page, centered' },
+  { value: 'book', label: 'Book', desc: 'Two pages side by side' },
+  { value: 'column', label: 'Column', desc: 'Split page into two columns' },
   { value: 'focus', label: 'Focus', desc: 'Hide everything, just read' },
-  { value: 'study', label: 'Study', desc: 'Sidebars open for active learning' },
 ];
 
 export const ReaderPreferencesComponent: React.FC<ReaderPreferencesProps> = ({ onChange }) => {

@@ -9,10 +9,22 @@ const DEFAULT_PREFS: ReaderPreferences = {
   fitMode: 'width',
   theme: 'light',
   readingMode: 'standard',
+  columnSide: 'left',
   leftSidebarOpen: true,
   rightSidebarOpen: false,
   lastPage: 1,
 };
+
+export function computeFitScale(fitMode: FitMode, containerW: number, containerH: number, pageW: number, pageH: number): number {
+  switch (fitMode) {
+    case 'width':
+      return containerW / pageW;
+    case 'height':
+      return containerH / pageH;
+    case 'actual':
+      return 1.0;
+  }
+}
 
 interface ReaderState {
   currentBookId: string | null;
@@ -21,6 +33,7 @@ interface ReaderState {
   zoom: number;
   fitMode: FitMode;
   readingMode: ReadingMode;
+  columnSide: 'left' | 'right';
   sidebarsOpen: { left: boolean; right: boolean };
   rightTab: 'bookmarks' | 'notes' | 'progress' | 'settings';
   progress: BookProgress | null;
@@ -29,6 +42,8 @@ interface ReaderState {
   isFullscreen: boolean;
   showSearch: boolean;
   showBookmarkForm: boolean;
+  containerWidth: number;
+  containerHeight: number;
 
   setCurrentBook: (bookId: string) => Promise<void>;
   setPage: (page: number) => void;
@@ -43,6 +58,10 @@ interface ReaderState {
   toggleFocusMode: () => void;
   enterFocusMode: () => void;
   exitFocusMode: () => void;
+  toggleColumnSide: () => void;
+  nextColumn: () => void;
+  prevColumn: () => void;
+  setContainerSize: (w: number, h: number) => void;
   setRightTab: (tab: ReaderState['rightTab']) => void;
   setIsFullscreen: (v: boolean) => void;
   setShowSearch: (v: boolean) => void;
@@ -79,6 +98,7 @@ export const useReaderStore = create<ReaderState>((set, get) => ({
   zoom: DEFAULT_PREFS.zoom,
   fitMode: DEFAULT_PREFS.fitMode,
   readingMode: DEFAULT_PREFS.readingMode,
+  columnSide: DEFAULT_PREFS.columnSide,
   sidebarsOpen: { left: DEFAULT_PREFS.leftSidebarOpen, right: DEFAULT_PREFS.rightSidebarOpen },
   rightTab: 'progress',
   progress: null,
@@ -87,6 +107,8 @@ export const useReaderStore = create<ReaderState>((set, get) => ({
   isFullscreen: false,
   showSearch: false,
   showBookmarkForm: false,
+  containerWidth: 0,
+  containerHeight: 0,
 
   setCurrentBook: async (bookId) => {
     const prefs = loadPrefsFromStorage();
@@ -95,6 +117,7 @@ export const useReaderStore = create<ReaderState>((set, get) => ({
       zoom: prefs.zoom,
       fitMode: prefs.fitMode,
       readingMode: prefs.readingMode,
+      columnSide: prefs.columnSide,
       sidebarsOpen: { left: prefs.leftSidebarOpen, right: prefs.rightSidebarOpen },
     });
     await get().loadProgress(bookId);
@@ -121,12 +144,9 @@ export const useReaderStore = create<ReaderState>((set, get) => ({
   },
 
   setReadingMode: (mode) => {
-    if (mode === 'focus') {
+    if (mode === 'focus' || mode === 'book' || mode === 'column') {
       set({ readingMode: mode, sidebarsOpen: { left: false, right: false } });
       savePrefsToStorage({ readingMode: mode, leftSidebarOpen: false, rightSidebarOpen: false });
-    } else if (mode === 'study') {
-      set({ readingMode: mode, sidebarsOpen: { left: true, right: true } });
-      savePrefsToStorage({ readingMode: mode, leftSidebarOpen: true, rightSidebarOpen: true });
     } else {
       const prefs = loadPrefsFromStorage();
       set({
@@ -138,12 +158,16 @@ export const useReaderStore = create<ReaderState>((set, get) => ({
   },
 
   toggleLeftSidebar: () => {
+    const { readingMode } = get();
+    if (readingMode === 'focus' || readingMode === 'book' || readingMode === 'column') return;
     const next = !get().sidebarsOpen.left;
     set((s) => ({ sidebarsOpen: { ...s.sidebarsOpen, left: next } }));
     savePrefsToStorage({ leftSidebarOpen: next });
   },
 
   toggleRightSidebar: () => {
+    const { readingMode } = get();
+    if (readingMode === 'focus' || readingMode === 'book' || readingMode === 'column') return;
     const next = !get().sidebarsOpen.right;
     set((s) => ({ sidebarsOpen: { ...s.sidebarsOpen, right: next } }));
     savePrefsToStorage({ rightSidebarOpen: next });
@@ -180,6 +204,40 @@ export const useReaderStore = create<ReaderState>((set, get) => ({
       get().enterFocusMode();
     }
   },
+
+  toggleColumnSide: () => {
+    const next = get().columnSide === 'left' ? 'right' : 'left';
+    set({ columnSide: next });
+    savePrefsToStorage({ columnSide: next });
+  },
+
+  nextColumn: () => {
+    const { columnSide, currentPage, totalPages } = get();
+    if (columnSide === 'left') {
+      set({ columnSide: 'right' });
+      savePrefsToStorage({ columnSide: 'right' });
+    } else {
+      if (currentPage < totalPages) {
+        set({ currentPage: currentPage + 1, columnSide: 'left' });
+        savePrefsToStorage({ lastPage: currentPage + 1, columnSide: 'left' });
+      }
+    }
+  },
+
+  prevColumn: () => {
+    const { columnSide, currentPage } = get();
+    if (columnSide === 'right') {
+      set({ columnSide: 'left' });
+      savePrefsToStorage({ columnSide: 'left' });
+    } else {
+      if (currentPage > 1) {
+        set({ currentPage: currentPage - 1, columnSide: 'right' });
+        savePrefsToStorage({ lastPage: currentPage - 1, columnSide: 'right' });
+      }
+    }
+  },
+
+  setContainerSize: (w, h) => set({ containerWidth: w, containerHeight: h }),
 
   setRightTab: (tab) => set({ rightTab: tab }),
 
@@ -241,6 +299,7 @@ export const useReaderStore = create<ReaderState>((set, get) => ({
       zoom: s.zoom,
       fitMode: s.fitMode,
       readingMode: s.readingMode,
+      columnSide: s.columnSide,
       leftSidebarOpen: s.sidebarsOpen.left,
       rightSidebarOpen: s.sidebarsOpen.right,
       lastPage: s.currentPage,
@@ -253,6 +312,7 @@ export const useReaderStore = create<ReaderState>((set, get) => ({
       zoom: prefs.zoom,
       fitMode: prefs.fitMode,
       readingMode: prefs.readingMode,
+      columnSide: prefs.columnSide,
       sidebarsOpen: { left: prefs.leftSidebarOpen, right: prefs.rightSidebarOpen },
     });
   },

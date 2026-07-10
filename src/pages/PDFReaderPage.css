@@ -293,6 +293,13 @@
   color: var(--text-inverse);
 }
 
+.pdf-toolbar-btn.disabled,
+.pdf-toolbar-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
 /* ===== Page Input ===== */
 .pdf-page-input {
   width: 48px;
@@ -579,6 +586,11 @@
   color: var(--text-inverse);
 }
 
+.pdf-setting-btns button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
 /* Shortcuts section in settings */
 .pdf-shortcuts-section {
   margin-top: var(--space-md);
@@ -617,6 +629,81 @@
   color: var(--text-primary);
 }
 
+/* ===== Column Mode Pill ===== */
+.pdf-column-pill {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 28px;
+  padding: 0 var(--space-sm);
+  background: none;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+
+.pdf-column-pill:hover {
+  background-color: var(--bg-tertiary);
+}
+
+.pdf-column-pill.active {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+  color: var(--text-inverse);
+}
+
+/* ===== Book Mode ===== */
+.pdf-book-viewer {
+  display: flex;
+  gap: var(--space-md);
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.pdf-book-page {
+  box-shadow: var(--shadow-md);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  line-height: 0;
+}
+
+.pdf-book-page .react-pdf__Page__canvas {
+  display: block;
+}
+
+/* ===== Column Mode ===== */
+.pdf-column-viewer {
+  display: flex;
+  gap: var(--space-md);
+  justify-content: center;
+  align-items: flex-start;
+  position: relative;
+}
+
+.pdf-column-hidden-page {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+.pdf-column-half {
+  overflow: hidden;
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-md);
+  background-color: var(--bg-card);
+}
+
+.pdf-column-half canvas {
+  display: block;
+}
+
 /* ===== Focus Mode ===== */
 .reader-focus .pdf-toolbar {
   background-color: transparent;
@@ -628,23 +715,24 @@
   padding: var(--space-xl) var(--space-3xl);
 }
 
-.reader-focus .pdf-sidebar-left:not(.open),
-.reader-focus .pdf-sidebar-right:not(.open) {
-  width: 0;
-  min-width: 0;
+/* ===== Book Mode (reader-level) ===== */
+.reader-book .pdf-viewer-wrapper {
+  padding: var(--space-xl) var(--space-lg);
 }
 
-/* ===== Study Mode ===== */
-.reader-study .pdf-sidebar-left,
-.reader-study .pdf-sidebar-right {
-  width: 280px;
-  min-width: 280px;
-  opacity: 1;
+/* ===== Column Mode (reader-level) ===== */
+.reader-column .pdf-viewer-wrapper {
+  padding: var(--space-lg);
 }
 
-.reader-study .pdf-sidebar-right {
-  width: 260px;
-  min-width: 260px;
+/* ===== Mode Transitions ===== */
+.pdf-viewer-wrapper {
+  transition: padding 0.3s ease, background-color 0.3s ease;
+}
+
+.pdf-book-viewer,
+.pdf-column-viewer {
+  transition: gap 0.3s ease;
 }
 
 /* ===== Responsive ===== */
@@ -711,5 +799,8 @@
   }
   .pdf-viewer-wrapper {
     padding: var(--space-sm);
+  }
+  .pdf-column-pill {
+    display: none;
   }
 }
