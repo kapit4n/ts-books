@@ -1,0 +1,66 @@
+.pdf-uploader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-3xl) var(--space-xl);
+  border: 2px dashed var(--border-color);
+  border-radius: var(--radius-xl);
+  background-color: var(--bg-card);
+  text-align: center;
+  transition: all var(--transition-fast);
+  cursor: pointer;
+}
+
+.pdf-uploader-dragging {
+  border-color: var(--color-primary);
+  background-color: var(--color-primary-light);
+}
+
+.pdf-uploader-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  background-color: var(--color-primary-light);
+  color: var(--color-primary);
+  border-radius: var(--radius-xl);
+}
+
+.pdf-uploader-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.pdf-uploader-subtitle {
+  font-size: 0.9375rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.pdf-uploader-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-lg);
+  background-color: var(--color-primary);
+  color: var(--text-inverse);
+  border-radius: var(--radius-lg);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+
+.pdf-uploader-btn:hover {
+  background-color: var(--color-primary-hover);
+}
+
+.pdf-uploader-formats {
+  font-size: 0.75rem;
+  color: var(--text-tertiary);
+  margin: 0;
+}

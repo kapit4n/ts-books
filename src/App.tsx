@@ -6,6 +6,10 @@ import { Home } from './pages/Home';
 import { BooksPage } from './pages/BooksPage';
 import { BookDetailsPage } from './pages/BookDetailsPage';
 import { ReaderPage } from './pages/ReaderPage';
+import { ImportPage } from './pages/ImportPage';
+import { LibraryDashboard } from './pages/LibraryDashboard';
+import { LibraryBookDetails } from './pages/LibraryBookDetails';
+import { PDFReaderPage } from './pages/PDFReaderPage';
 import About from './pages/About';
 import './App.css';
 
@@ -30,6 +34,10 @@ function App() {
           <Route path="/books" element={<BooksPage />} />
           <Route path="/books/:slug" element={<BookDetailsPage />} />
           <Route path="/books/:slug/read" element={<ReaderPage />} />
+          <Route path="/library" element={<LibraryDashboard />} />
+          <Route path="/library/import" element={<ImportPage />} />
+          <Route path="/library/:id" element={<LibraryBookDetails />} />
+          <Route path="/library/:id/read" element={<PDFReaderPage />} />
           <Route path="/about" element={<About />} />
           <Route path="/detail/:bookId" element={<Home />} />
         </Routes>

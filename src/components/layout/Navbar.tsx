@@ -33,6 +33,7 @@ export const Navbar: React.FC<NavbarProps> = ({ isDarkMode, onToggleDarkMode }) 
 
         <div className="navbar-center">
           <a href="/books" className="navbar-link">Books</a>
+          <a href="/library" className="navbar-link">Library</a>
           <a href="/#categories" className="navbar-link">Categories</a>
           <a href="/books" className="navbar-link">Explore</a>
         </div>

@@ -1,0 +1,465 @@
+.pdf-reader-page {
+  display: flex;
+  height: calc(100vh - 60px);
+  background-color: var(--bg-primary);
+  overflow: hidden;
+}
+
+.pdf-sidebar-left {
+  width: 280px;
+  background-color: var(--bg-secondary);
+  border-right: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  flex-shrink: 0;
+}
+
+.pdf-sidebar-header {
+  padding: var(--space-md);
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.pdf-sidebar-close {
+  display: none;
+}
+
+.pdf-sidebar-back {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 0.875rem;
+}
+
+.pdf-sidebar-back:hover { color: var(--color-primary); }
+
+.pdf-sidebar-book {
+  padding: var(--space-lg);
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.pdf-sidebar-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.pdf-sidebar-author {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.pdf-sidebar-section {
+  padding: var(--space-md);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.pdf-sidebar-section h4 {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0 0 var(--space-sm) 0;
+}
+
+.pdf-today-goal {
+  padding: var(--space-md);
+  background-color: var(--color-primary-light);
+  border-radius: var(--radius-md);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--color-primary);
+}
+
+.pdf-outline-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.pdf-outline-item {
+  display: block;
+  width: 100%;
+  padding: var(--space-xs) var(--space-sm);
+  background: none;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+  text-align: left;
+  cursor: pointer;
+}
+
+.pdf-outline-item:hover {
+  background-color: var(--bg-card-hover);
+  color: var(--text-primary);
+}
+
+.pdf-bookmark-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.pdf-bookmark-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm);
+  background: none;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+}
+
+.pdf-bookmark-item:hover { background-color: var(--bg-card-hover); }
+
+.pdf-bookmark-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.pdf-bookmark-title {
+  display: block;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.pdf-bookmark-page {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--text-tertiary);
+}
+
+.pdf-empty-text {
+  font-size: 0.875rem;
+  color: var(--text-tertiary);
+}
+
+/* Center */
+.pdf-reader-center {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-width: 0;
+}
+
+.pdf-toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-sm) var(--space-md);
+  border-bottom: 1px solid var(--border-color);
+  background-color: var(--bg-card);
+}
+
+.pdf-toolbar-btn,
+.pdf-toolbar-right button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: none;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.pdf-toolbar-btn:hover,
+.pdf-toolbar-right button:hover {
+  background-color: var(--bg-tertiary);
+}
+
+.pdf-page-nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.pdf-page-nav button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: none;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.pdf-page-nav button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.pdf-page-info {
+  font-size: 0.875rem;
+  color: var(--text-primary);
+  min-width: 120px;
+  text-align: center;
+}
+
+.pdf-zoom-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.pdf-zoom-controls button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: none;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.pdf-zoom-controls span {
+  font-size: 0.8125rem;
+  color: var(--text-primary);
+  min-width: 40px;
+  text-align: center;
+}
+
+.pdf-toolbar-right {
+  margin-left: auto;
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.pdf-bookmark-form {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  background-color: var(--bg-card);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.pdf-bookmark-form input {
+  flex: 1;
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  color: var(--text-primary);
+  background-color: var(--bg-secondary);
+  outline: none;
+}
+
+.pdf-viewer-wrapper {
+  flex: 1;
+  overflow: auto;
+  display: flex;
+  justify-content: center;
+  padding: var(--space-lg);
+  background-color: var(--bg-tertiary);
+}
+
+.pdf-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-3xl);
+  color: var(--text-secondary);
+}
+
+.pdf-loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--border-color);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.pdf-error {
+  padding: var(--space-3xl);
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+/* Right Panel */
+.pdf-sidebar-right {
+  width: 260px;
+  background-color: var(--bg-secondary);
+  border-left: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  flex-shrink: 0;
+}
+
+.pdf-right-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.pdf-right-tab {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  padding: var(--space-sm);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.pdf-right-tab.active {
+  color: var(--color-primary);
+  border-bottom-color: var(--color-primary);
+}
+
+.pdf-right-content {
+  flex: 1;
+  padding: var(--space-md);
+}
+
+.pdf-progress-panel,
+.pdf-bookmarks-panel,
+.pdf-settings-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.pdf-stat-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.875rem;
+}
+
+.pdf-stat-row span { color: var(--text-secondary); }
+.pdf-stat-row strong { color: var(--text-primary); }
+
+.pdf-right-bookmark {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm);
+  border-radius: var(--radius-sm);
+}
+
+.pdf-right-bookmark:hover { background-color: var(--bg-card-hover); }
+
+.pdf-bookmark-remove {
+  margin-left: auto;
+  background: none;
+  border: none;
+  color: var(--text-tertiary);
+  cursor: pointer;
+}
+
+.pdf-setting {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.875rem;
+}
+
+.pdf-setting label { color: var(--text-secondary); }
+
+.pdf-setting-btns {
+  display: flex;
+  gap: var(--space-xs);
+}
+
+.pdf-setting-btns button {
+  padding: var(--space-xs) var(--space-sm);
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.pdf-setting-btns button.active {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+  color: var(--text-inverse);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .pdf-sidebar-left,
+  .pdf-sidebar-right {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    z-index: 200;
+    box-shadow: var(--shadow-xl);
+  }
+  .pdf-sidebar-left {
+    left: 0;
+    transform: translateX(-100%);
+    transition: transform var(--transition-normal);
+  }
+  .pdf-sidebar-right {
+    right: 0;
+    transform: translateX(100%);
+    transition: transform var(--transition-normal);
+  }
+  .pdf-sidebar-left.open,
+  .pdf-sidebar-right.open {
+    transform: translateX(0);
+  }
+  .pdf-sidebar-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: none;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    color: var(--text-secondary);
+    cursor: pointer;
+    align-self: flex-end;
+  }
+}
+
+@media (max-width: 640px) {
+  .pdf-toolbar {
+    flex-wrap: wrap;
+  }
+  .pdf-zoom-controls {
+    display: none;
+  }
+}
