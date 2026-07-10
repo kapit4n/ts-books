@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
+import {
+  CheckCircle2, AlertCircle, Loader2, ChevronRight,
+  Upload, Clock, FolderOpen, BookOpen,
+} from 'lucide-react';
 import { PDFUploader } from '../components/library/PDFUploader';
 import { ReadingStrategySetup } from '../components/library/ReadingStrategySetup';
 import { useLibraryStore } from '../hooks/useLibrary';
@@ -85,21 +88,79 @@ export const ImportPage: React.FC = () => {
   };
 
   const recentlyImported = books.slice(0, 5);
+  const mostRecentBook = books.length > 0 ? books[0] : null;
 
   return (
     <div className="import-page">
       <div className="import-page-container">
+        {/* Hero */}
         <motion.div
+          className="import-hero"
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <h1 className="import-page-title">Import Books</h1>
-          <p className="import-page-subtitle">Add PDF books to your personal library</p>
+          <a href="/library" className="import-back-link">
+            <ChevronRight size={16} style={{ transform: 'rotate(180deg)' }} />
+            Library
+          </a>
+          <h1 className="import-page-title">Import PDF</h1>
+          <p className="import-page-subtitle">
+            Build your personal learning library. Upload any PDF book and transform it into a
+            structured reading experience.
+          </p>
         </motion.div>
 
-        <PDFUploader onFilesSelected={handleFilesSelected} />
+        {/* Upload Card */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.1 }}
+        >
+          <PDFUploader onFilesSelected={handleFilesSelected} />
+          <div className="import-format-info">
+            <span>Supported formats: <strong>PDF</strong></span>
+            <span className="import-format-sep">|</span>
+            <span>Maximum size: <strong>50MB</strong></span>
+          </div>
+        </motion.div>
 
+        {/* Quick Actions */}
+        <motion.div
+          className="import-quick-actions"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.2 }}
+        >
+          <h3 className="import-section-title">Quick Actions</h3>
+          <div className="import-quick-grid">
+            <a href="#recent-imports" className="import-quick-card">
+              <Clock size={20} />
+              <span className="import-quick-label">Recent Imports</span>
+            </a>
+            <button className="import-quick-card" onClick={() => window.location.reload()}>
+              <Upload size={20} />
+              <span className="import-quick-label">Import Another PDF</span>
+            </button>
+            <a href="/library" className="import-quick-card">
+              <FolderOpen size={20} />
+              <span className="import-quick-label">Browse Library</span>
+            </a>
+            {mostRecentBook ? (
+              <a href={`/library/${mostRecentBook.id}/read`} className="import-quick-card">
+                <BookOpen size={20} />
+                <span className="import-quick-label">Continue Reading</span>
+              </a>
+            ) : (
+              <a href="/books" className="import-quick-card">
+                <BookOpen size={20} />
+                <span className="import-quick-label">Browse Built-in Books</span>
+              </a>
+            )}
+          </div>
+        </motion.div>
+
+        {/* Pending Books */}
         {pendingBooks.length > 0 && (
           <div className="import-pending">
             <h3 className="import-section-title">Processing</h3>
@@ -140,6 +201,7 @@ export const ImportPage: React.FC = () => {
           </div>
         )}
 
+        {/* Reading Strategy */}
         {strategyBook && strategyBook.processed && (
           <ReadingStrategySetup
             bookTitle={strategyBook.processed.title}
@@ -149,8 +211,9 @@ export const ImportPage: React.FC = () => {
           />
         )}
 
+        {/* Recently Imported */}
         {recentlyImported.length > 0 && (
-          <div className="import-recent">
+          <div className="import-recent" id="recent-imports">
             <h3 className="import-section-title">Recently Imported</h3>
             <div className="import-recent-list">
               {recentlyImported.map((book) => (

@@ -152,6 +152,38 @@
   color: var(--text-tertiary);
 }
 
+/* Sidebar Shortcuts */
+.pdf-sidebar-shortcuts {
+  margin-top: auto;
+}
+
+.pdf-shortcut-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all var(--transition-fast);
+}
+
+.pdf-shortcut-item:hover {
+  background-color: var(--bg-card-hover);
+  color: var(--text-primary);
+}
+
+.pdf-shortcut-import {
+  color: var(--color-primary);
+}
+
+.pdf-shortcut-import:hover {
+  background-color: var(--color-primary-light);
+  color: var(--color-primary);
+}
+
 /* Center */
 .pdf-reader-center {
   flex: 1;

@@ -77,7 +77,7 @@ export const PDFUploader: React.FC<PDFUploaderProps> = ({ onFilesSelected }) => 
           style={{ display: 'none' }}
         />
       </label>
-      <p className="pdf-uploader-formats">PDF only</p>
+      <p className="pdf-uploader-formats">PDF only · Maximum size: 50MB</p>
     </motion.div>
   );
 };

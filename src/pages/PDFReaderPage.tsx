@@ -5,7 +5,7 @@ import 'react-pdf/dist/Page/AnnotationLayer.css';
 import 'react-pdf/dist/Page/TextLayer.css';
 import {
   Menu, X, ChevronLeft, ChevronRight, ZoomIn, ZoomOut,
-  Bookmark, BarChart3, Settings,
+  Bookmark, BarChart3, Settings, BookOpen, FolderOpen, Upload,
 } from 'lucide-react';
 import { useLibraryStore } from '../hooks/useLibrary';
 import { useReaderStore } from '../hooks/useReader';
@@ -145,6 +145,23 @@ export const PDFReaderPage: React.FC = () => {
               <p className="pdf-empty-text">No bookmarks yet.</p>
             )}
           </div>
+        </div>
+
+        {/* Sidebar Shortcuts */}
+        <div className="pdf-sidebar-section pdf-sidebar-shortcuts">
+          <h4>Shortcuts</h4>
+          <a href="/library" className="pdf-shortcut-item">
+            <BookOpen size={16} />
+            Library
+          </a>
+          <a href="/library" className="pdf-shortcut-item">
+            <FolderOpen size={16} />
+            Recent Books
+          </a>
+          <a href="/library/import" className="pdf-shortcut-item pdf-shortcut-import">
+            <Upload size={16} />
+            Import PDF
+          </a>
         </div>
       </aside>
 

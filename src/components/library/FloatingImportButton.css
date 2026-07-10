@@ -1,0 +1,33 @@
+.fab-import {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .fab-import {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: var(--z-fab, 900);
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    border: none;
+    background-color: var(--color-primary);
+    color: var(--text-inverse);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+    cursor: pointer;
+    transition: background-color var(--transition-fast);
+  }
+
+  .fab-import:hover {
+    background-color: var(--color-primary-hover);
+  }
+
+  .fab-import:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+}

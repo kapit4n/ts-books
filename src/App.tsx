@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { Navbar } from './components/layout/Navbar';
 import { Footer } from './components/layout/Footer';
+import { FloatingImportButton } from './components/library/FloatingImportButton';
 import { Home } from './pages/Home';
 import { BooksPage } from './pages/BooksPage';
 import { BookDetailsPage } from './pages/BookDetailsPage';
@@ -42,6 +43,7 @@ function App() {
           <Route path="/detail/:bookId" element={<Home />} />
         </Routes>
       </main>
+      <FloatingImportButton />
       <Footer />
     </div>
   );

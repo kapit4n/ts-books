@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { BookOpen, Search, Moon, Sun, Menu, X } from 'lucide-react';
+import { BookOpen, Search, Moon, Sun, Menu, X, Upload } from 'lucide-react';
 import { GithubIcon } from '../ui/GithubIcon';
 import './Navbar.css';
 
@@ -39,6 +39,10 @@ export const Navbar: React.FC<NavbarProps> = ({ isDarkMode, onToggleDarkMode }) 
         </div>
 
         <div className="navbar-right">
+          <a href="/library/import" className="navbar-import-btn">
+            <Upload size={16} />
+            <span>Import PDF</span>
+          </a>
           <button className="navbar-icon-btn" aria-label="Search">
             <Search size={20} />
           </button>
@@ -77,8 +81,13 @@ export const Navbar: React.FC<NavbarProps> = ({ isDarkMode, onToggleDarkMode }) 
             className="navbar-mobile-menu"
           >
             <a href="/books" className="navbar-mobile-link">Books</a>
+            <a href="/library" className="navbar-mobile-link">Library</a>
             <a href="/#categories" className="navbar-mobile-link">Categories</a>
             <a href="/books" className="navbar-mobile-link">Explore</a>
+            <a href="/library/import" className="navbar-mobile-link navbar-mobile-import">
+              <Upload size={16} />
+              Import PDF
+            </a>
           </motion.div>
         )}
       </AnimatePresence>
