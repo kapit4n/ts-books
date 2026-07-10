@@ -1,0 +1,15 @@
+.book-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-md);
+}
+
+@media (max-width: 480px) {
+  .book-actions {
+    flex-direction: column;
+  }
+
+  .book-actions .btn {
+    width: 100%;
+  }
+}

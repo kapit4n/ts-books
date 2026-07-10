@@ -1,0 +1,13 @@
+.book-details-page {
+  padding: var(--space-2xl) var(--space-xl);
+  background-color: var(--bg-secondary);
+  min-height: 80vh;
+}
+
+.book-details-container {
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xl);
+}

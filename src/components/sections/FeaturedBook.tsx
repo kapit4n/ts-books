@@ -60,7 +60,7 @@ export const FeaturedBook: React.FC<FeaturedBookProps> = ({ book }) => {
               </div>
               <div className="featured-book-stat">
                 <BookOpen size={16} />
-                <span>{book.chapters} chapters</span>
+                <span>{book.chapters.length} chapters</span>
               </div>
             </div>
             <Button>Continue</Button>

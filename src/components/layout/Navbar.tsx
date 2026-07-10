@@ -32,9 +32,9 @@ export const Navbar: React.FC<NavbarProps> = ({ isDarkMode, onToggleDarkMode }) 
         </div>
 
         <div className="navbar-center">
-          <a href="#books" className="navbar-link">Books</a>
-          <a href="#categories" className="navbar-link">Categories</a>
-          <a href="#explore" className="navbar-link">Explore</a>
+          <a href="/books" className="navbar-link">Books</a>
+          <a href="/#categories" className="navbar-link">Categories</a>
+          <a href="/books" className="navbar-link">Explore</a>
         </div>
 
         <div className="navbar-right">
@@ -75,9 +75,9 @@ export const Navbar: React.FC<NavbarProps> = ({ isDarkMode, onToggleDarkMode }) 
             exit={{ opacity: 0, height: 0 }}
             className="navbar-mobile-menu"
           >
-            <a href="#books" className="navbar-mobile-link">Books</a>
-            <a href="#categories" className="navbar-mobile-link">Categories</a>
-            <a href="#explore" className="navbar-mobile-link">Explore</a>
+            <a href="/books" className="navbar-mobile-link">Books</a>
+            <a href="/#categories" className="navbar-mobile-link">Categories</a>
+            <a href="/books" className="navbar-mobile-link">Explore</a>
           </motion.div>
         )}
       </AnimatePresence>

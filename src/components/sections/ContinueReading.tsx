@@ -12,8 +12,9 @@ interface ContinueReadingProps {
 
 export const ContinueReading: React.FC<ContinueReadingProps> = ({ book }) => {
   const progress = book.progress || 0;
-  const currentChapter = Math.ceil((progress / 100) * book.chapters);
-  const remainingChapters = book.chapters - currentChapter;
+  const totalChapters = book.chapters.length;
+  const currentChapter = Math.ceil((progress / 100) * totalChapters);
+  const remainingChapters = totalChapters - currentChapter;
 
   return (
     <section className="continue-reading">
@@ -33,7 +34,7 @@ export const ContinueReading: React.FC<ContinueReadingProps> = ({ book }) => {
             <h3 className="continue-reading-title">{book.title}</h3>
             <div className="continue-reading-meta">
               <span className="continue-reading-chapter">
-                Chapter {currentChapter} of {book.chapters}
+                Chapter {currentChapter} of {totalChapters}
               </span>
               <span className="continue-reading-remaining">
                 {remainingChapters} chapters remaining
@@ -41,7 +42,7 @@ export const ContinueReading: React.FC<ContinueReadingProps> = ({ book }) => {
             </div>
             <ProgressBar progress={progress} showLabel />
           </div>
-          <Button>Continue</Button>
+          <Button onClick={() => window.location.href = `/books/${book.slug}`}>Continue</Button>
         </motion.div>
       </div>
     </section>

@@ -6,7 +6,7 @@ import { ContinueReading } from '../components/sections/ContinueReading';
 import { PopularBooks } from '../components/sections/PopularBooks';
 import { RecentlyUpdated } from '../components/sections/RecentlyUpdated';
 import { WhyTsBooks } from '../components/sections/WhyTsBooks';
-import { featuredBook, continueReading, recentlyUpdated } from '../data/mockData';
+import { featuredBook, continueReadingBook, recentlyUpdated } from '../data/mockData';
 
 export const Home: React.FC = () => {
   return (
@@ -14,7 +14,7 @@ export const Home: React.FC = () => {
       <Hero />
       <Categories />
       <FeaturedBook book={featuredBook} />
-      <ContinueReading book={continueReading} />
+      <ContinueReading book={continueReadingBook} />
       <PopularBooks />
       <RecentlyUpdated books={recentlyUpdated} />
       <WhyTsBooks />

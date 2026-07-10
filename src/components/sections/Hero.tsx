@@ -32,8 +32,8 @@ export const Hero: React.FC = () => {
               From fundamentals to advanced patterns, level up your skills.
             </p>
             <div className="hero-buttons">
-              <Button size="lg">Start Learning</Button>
-              <Button variant="secondary" size="lg">Browse Books</Button>
+              <Button size="lg" onClick={() => window.location.href = '/books'}>Start Learning</Button>
+              <Button variant="secondary" size="lg" onClick={() => window.location.href = '/books'}>Browse Books</Button>
             </div>
           </motion.div>
 

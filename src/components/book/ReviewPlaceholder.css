@@ -1,0 +1,33 @@
+.review-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-2xl);
+  background-color: var(--bg-card);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border-color);
+  text-align: center;
+}
+
+.review-placeholder-stars {
+  display: flex;
+  gap: var(--space-xs);
+}
+
+.review-star-empty {
+  color: var(--text-tertiary);
+}
+
+.review-placeholder-text {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.review-placeholder-subtext {
+  font-size: 0.9375rem;
+  color: var(--text-secondary);
+  margin: 0;
+}

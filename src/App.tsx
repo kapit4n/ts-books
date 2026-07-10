@@ -3,7 +3,9 @@ import { Routes, Route } from 'react-router-dom';
 import { Navbar } from './components/layout/Navbar';
 import { Footer } from './components/layout/Footer';
 import { Home } from './pages/Home';
-import BookDetails from './pages/BookDetail';
+import { BooksPage } from './pages/BooksPage';
+import { BookDetailsPage } from './pages/BookDetailsPage';
+import { ReaderPage } from './pages/ReaderPage';
 import About from './pages/About';
 import './App.css';
 
@@ -25,8 +27,11 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/home" element={<Home />} />
-          <Route path="/detail/:bookId" element={<BookDetails />} />
+          <Route path="/books" element={<BooksPage />} />
+          <Route path="/books/:slug" element={<BookDetailsPage />} />
+          <Route path="/books/:slug/read" element={<ReaderPage />} />
           <Route path="/about" element={<About />} />
+          <Route path="/detail/:bookId" element={<Home />} />
         </Routes>
       </main>
       <Footer />

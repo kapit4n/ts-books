@@ -47,7 +47,7 @@ export const BookCard: React.FC<BookCardProps> = ({ book }) => {
           </div>
           <div className="book-card-stat">
             <BookOpen size={14} />
-            <span>{book.chapters} chapters</span>
+            <span>{book.chapters.length} chapters</span>
           </div>
         </div>
         <div className="book-card-rating">
