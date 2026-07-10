@@ -149,36 +149,32 @@ export const PDFReaderPage: React.FC = () => {
     };
   }, [isFocusMode]);
 
-  // ResizeObserver for container dimensions (debounced to avoid loop with fit-scale)
+  // Track container size via ResizeObserver (no auto-fit, just tracking)
   useEffect(() => {
     const el = viewerWrapperRef.current;
     if (!el) return;
-    let raf: number;
-    const ro = new ResizeObserver((entries) => {
-      cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(() => {
-        for (const entry of entries) {
-          const { width, height } = entry.contentRect;
-          setContainerSize(width, height);
-        }
-      });
-    });
-    ro.observe(el);
-    return () => { ro.disconnect(); cancelAnimationFrame(raf); };
+    const rect = el.getBoundingClientRect();
+    setContainerSize(rect.width, rect.height);
+    const onResize = () => {
+      const r = el.getBoundingClientRect();
+      setContainerSize(r.width, r.height);
+    };
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
   }, [setContainerSize]);
 
-  // Compute fit scale when fitMode or page dimensions change
-  const lastFitZoomRef = useRef(0);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => {
+  // Apply fit scale when fitMode changes or page loads (not on container resize)
+  const applyFitScale = useCallback(() => {
     if (pageWidth > 0 && pageHeight > 0 && containerWidth > 0 && containerHeight > 0 && fitMode !== 'actual') {
       const newZoom = computeFitScale(fitMode, containerWidth, containerHeight, pageWidth, pageHeight);
-      if (Math.abs(newZoom - lastFitZoomRef.current) > 0.005) {
-        lastFitZoomRef.current = newZoom;
-        setZoom(newZoom);
-      }
+      setZoom(newZoom);
     }
-  }, [fitMode, containerWidth, containerHeight, pageWidth, pageHeight]);
+  }, [fitMode, containerWidth, containerHeight, pageWidth, pageHeight, setZoom]);
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    applyFitScale();
+  }, [fitMode, pageWidth, pageHeight]);
 
   // Keyboard shortcuts
   useEffect(() => {
@@ -312,10 +308,13 @@ export const PDFReaderPage: React.FC = () => {
     return () => container.removeEventListener('wheel', handler);
   }, [zoom, setZoom]);
 
-  // Page load callback to capture page dimensions
-  const onPageLoadSuccess = useCallback(({ width, height }: { width: number; height: number }) => {
-    setPageWidth(width);
-    setPageHeight(height);
+  // Page load callback — capture intrinsic dimensions only once
+  const intrinsicPageSet = useRef(false);
+  const onPageLoadSuccess = useCallback(({ width, height, originalWidth, originalHeight }: any) => {
+    if (intrinsicPageSet.current) return;
+    intrinsicPageSet.current = true;
+    setPageWidth(originalWidth || width);
+    setPageHeight(originalHeight || height);
   }, []);
 
   const handleAddBookmark = useCallback(() => {
