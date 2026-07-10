@@ -1,7 +1,7 @@
 import * as pdfjsLib from 'pdfjs-dist';
 import { ImportedBook, BookOutline } from '../types/library';
 
-pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
+pdfjsLib.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.js`;
 
 function estimateReadingTime(pages: number): string {
   const minutes = Math.ceil(pages * 1.5);
@@ -18,6 +18,7 @@ export async function processPDF(
   const arrayBuffer = await file.arrayBuffer();
   onProgress?.(10);
 
+  const storedBuffer = arrayBuffer.slice(0);
   const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
   onProgress?.(30);
 
@@ -71,7 +72,7 @@ export async function processPDF(
     author,
     fileName: file.name,
     pageCount: pdf.numPages,
-    pdfData: arrayBuffer,
+    pdfData: storedBuffer,
     thumbnail,
     metadata: info,
     outline,

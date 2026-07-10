@@ -1,68 +1,201 @@
 import { create } from 'zustand';
 import { db } from '../services/database';
-import { BookBookmark, BookProgress, ReadingPlan } from '../types/library';
+import { BookBookmark, BookProgress, ReadingPlan, ReadingMode, FitMode, ReaderPreferences } from '../types/library';
+
+const PREFS_KEY = 'ts-books-reader-prefs';
+
+const DEFAULT_PREFS: ReaderPreferences = {
+  zoom: 1.0,
+  fitMode: 'width',
+  theme: 'light',
+  readingMode: 'standard',
+  leftSidebarOpen: true,
+  rightSidebarOpen: false,
+  lastPage: 1,
+};
 
 interface ReaderState {
   currentBookId: string | null;
   currentPage: number;
   totalPages: number;
   zoom: number;
-  fitMode: 'width' | 'page';
+  fitMode: FitMode;
+  readingMode: ReadingMode;
   sidebarsOpen: { left: boolean; right: boolean };
   rightTab: 'bookmarks' | 'notes' | 'progress' | 'settings';
   progress: BookProgress | null;
   bookmarks: BookBookmark[];
   plan: ReadingPlan | null;
+  isFullscreen: boolean;
+  showSearch: boolean;
+  showBookmarkForm: boolean;
+
   setCurrentBook: (bookId: string) => Promise<void>;
   setPage: (page: number) => void;
   setTotalPages: (total: number) => void;
   setZoom: (zoom: number) => void;
-  setFitMode: (mode: 'width' | 'page') => void;
-  toggleSidebar: (side: 'left' | 'right') => void;
+  setFitMode: (mode: FitMode) => void;
+  setReadingMode: (mode: ReadingMode) => void;
+  toggleLeftSidebar: () => void;
+  toggleRightSidebar: () => void;
+  setLeftSidebar: (open: boolean) => void;
+  setRightSidebar: (open: boolean) => void;
+  toggleFocusMode: () => void;
+  enterFocusMode: () => void;
+  exitFocusMode: () => void;
   setRightTab: (tab: ReaderState['rightTab']) => void;
+  setIsFullscreen: (v: boolean) => void;
+  setShowSearch: (v: boolean) => void;
+  setShowBookmarkForm: (v: boolean) => void;
   loadProgress: (bookId: string) => Promise<void>;
   saveProgress: (bookId: string, page: number, totalPages: number) => Promise<void>;
   loadBookmarks: (bookId: string) => Promise<void>;
   addBookmark: (bookmark: BookBookmark) => Promise<void>;
   removeBookmark: (id: string) => Promise<void>;
   loadPlan: (bookId: string) => Promise<void>;
+  savePreferences: () => void;
+  loadPreferences: () => void;
+}
+
+function loadPrefsFromStorage(): ReaderPreferences {
+  try {
+    const raw = localStorage.getItem(PREFS_KEY);
+    if (raw) return { ...DEFAULT_PREFS, ...JSON.parse(raw) };
+  } catch {}
+  return DEFAULT_PREFS;
+}
+
+function savePrefsToStorage(prefs: Partial<ReaderPreferences>) {
+  try {
+    const existing = loadPrefsFromStorage();
+    localStorage.setItem(PREFS_KEY, JSON.stringify({ ...existing, ...prefs }));
+  } catch {}
 }
 
 export const useReaderStore = create<ReaderState>((set, get) => ({
   currentBookId: null,
   currentPage: 1,
   totalPages: 0,
-  zoom: 1.0,
-  fitMode: 'width',
-  sidebarsOpen: { left: true, right: false },
+  zoom: DEFAULT_PREFS.zoom,
+  fitMode: DEFAULT_PREFS.fitMode,
+  readingMode: DEFAULT_PREFS.readingMode,
+  sidebarsOpen: { left: DEFAULT_PREFS.leftSidebarOpen, right: DEFAULT_PREFS.rightSidebarOpen },
   rightTab: 'progress',
   progress: null,
   bookmarks: [],
   plan: null,
+  isFullscreen: false,
+  showSearch: false,
+  showBookmarkForm: false,
 
   setCurrentBook: async (bookId) => {
-    set({ currentBookId: bookId });
+    const prefs = loadPrefsFromStorage();
+    set({
+      currentBookId: bookId,
+      zoom: prefs.zoom,
+      fitMode: prefs.fitMode,
+      readingMode: prefs.readingMode,
+      sidebarsOpen: { left: prefs.leftSidebarOpen, right: prefs.rightSidebarOpen },
+    });
     await get().loadProgress(bookId);
     await get().loadBookmarks(bookId);
     await get().loadPlan(bookId);
   },
 
-  setPage: (page) => set({ currentPage: page }),
+  setPage: (page) => {
+    set({ currentPage: page });
+    savePrefsToStorage({ lastPage: page });
+  },
+
   setTotalPages: (total) => set({ totalPages: total }),
-  setZoom: (zoom) => set({ zoom: Math.max(0.5, Math.min(3, zoom)) }),
-  setFitMode: (mode) => set({ fitMode: mode }),
-  toggleSidebar: (side) =>
-    set((state) => ({
-      sidebarsOpen: {
-        ...state.sidebarsOpen,
-        [side]: !state.sidebarsOpen[side],
-      },
-    })),
+
+  setZoom: (zoom) => {
+    const clamped = Math.max(0.25, Math.min(5, zoom));
+    set({ zoom: clamped });
+    savePrefsToStorage({ zoom: clamped });
+  },
+
+  setFitMode: (mode) => {
+    set({ fitMode: mode });
+    savePrefsToStorage({ fitMode: mode });
+  },
+
+  setReadingMode: (mode) => {
+    if (mode === 'focus') {
+      set({ readingMode: mode, sidebarsOpen: { left: false, right: false } });
+      savePrefsToStorage({ readingMode: mode, leftSidebarOpen: false, rightSidebarOpen: false });
+    } else if (mode === 'study') {
+      set({ readingMode: mode, sidebarsOpen: { left: true, right: true } });
+      savePrefsToStorage({ readingMode: mode, leftSidebarOpen: true, rightSidebarOpen: true });
+    } else {
+      const prefs = loadPrefsFromStorage();
+      set({
+        readingMode: mode,
+        sidebarsOpen: { left: prefs.leftSidebarOpen, right: prefs.rightSidebarOpen },
+      });
+      savePrefsToStorage({ readingMode: mode });
+    }
+  },
+
+  toggleLeftSidebar: () => {
+    const next = !get().sidebarsOpen.left;
+    set((s) => ({ sidebarsOpen: { ...s.sidebarsOpen, left: next } }));
+    savePrefsToStorage({ leftSidebarOpen: next });
+  },
+
+  toggleRightSidebar: () => {
+    const next = !get().sidebarsOpen.right;
+    set((s) => ({ sidebarsOpen: { ...s.sidebarsOpen, right: next } }));
+    savePrefsToStorage({ rightSidebarOpen: next });
+  },
+
+  setLeftSidebar: (open) => {
+    set((s) => ({ sidebarsOpen: { ...s.sidebarsOpen, left: open } }));
+    savePrefsToStorage({ leftSidebarOpen: open });
+  },
+
+  setRightSidebar: (open) => {
+    set((s) => ({ sidebarsOpen: { ...s.sidebarsOpen, right: open } }));
+    savePrefsToStorage({ rightSidebarOpen: open });
+  },
+
+  enterFocusMode: () => {
+    set({ readingMode: 'focus', sidebarsOpen: { left: false, right: false } });
+    savePrefsToStorage({ readingMode: 'focus', leftSidebarOpen: false, rightSidebarOpen: false });
+  },
+
+  exitFocusMode: () => {
+    const prefs = loadPrefsFromStorage();
+    set({
+      readingMode: 'standard',
+      sidebarsOpen: { left: prefs.leftSidebarOpen, right: prefs.rightSidebarOpen },
+    });
+    savePrefsToStorage({ readingMode: 'standard' });
+  },
+
+  toggleFocusMode: () => {
+    if (get().readingMode === 'focus') {
+      get().exitFocusMode();
+    } else {
+      get().enterFocusMode();
+    }
+  },
+
   setRightTab: (tab) => set({ rightTab: tab }),
+
+  setIsFullscreen: (v) => set({ isFullscreen: v }),
+
+  setShowSearch: (v) => set({ showSearch: v }),
+
+  setShowBookmarkForm: (v) => set({ showBookmarkForm: v }),
 
   loadProgress: async (bookId) => {
     const progress = await db.progress.get(bookId);
-    set({ progress: progress || null, currentPage: progress?.currentPage || 1 });
+    const prefs = loadPrefsFromStorage();
+    set({
+      progress: progress || null,
+      currentPage: progress?.currentPage || prefs.lastPage || 1,
+    });
   },
 
   saveProgress: async (bookId, page, totalPages) => {
@@ -100,5 +233,27 @@ export const useReaderStore = create<ReaderState>((set, get) => ({
   loadPlan: async (bookId) => {
     const plan = await db.plans.where('bookId').equals(bookId).first();
     set({ plan: plan || null });
+  },
+
+  savePreferences: () => {
+    const s = get();
+    savePrefsToStorage({
+      zoom: s.zoom,
+      fitMode: s.fitMode,
+      readingMode: s.readingMode,
+      leftSidebarOpen: s.sidebarsOpen.left,
+      rightSidebarOpen: s.sidebarsOpen.right,
+      lastPage: s.currentPage,
+    });
+  },
+
+  loadPreferences: () => {
+    const prefs = loadPrefsFromStorage();
+    set({
+      zoom: prefs.zoom,
+      fitMode: prefs.fitMode,
+      readingMode: prefs.readingMode,
+      sidebarsOpen: { left: prefs.leftSidebarOpen, right: prefs.rightSidebarOpen },
+    });
   },
 }));

@@ -75,12 +75,20 @@ export interface ReadingAnalytics {
   avgSessionMinutes: number;
 }
 
+export type ReadingMode = 'standard' | 'focus' | 'study';
+
+export type FitMode = 'width' | 'height' | 'actual';
+
+export type ReaderTheme = 'light' | 'dark' | 'sepia';
+
 export interface ReaderPreferences {
   zoom: number;
-  fitMode: 'width' | 'page';
-  theme: 'light' | 'dark';
-  pageSpacing: number;
-  continuousScroll: boolean;
+  fitMode: FitMode;
+  theme: ReaderTheme;
+  readingMode: ReadingMode;
+  leftSidebarOpen: boolean;
+  rightSidebarOpen: boolean;
+  lastPage: number;
 }
 
 export interface ImportJob {
