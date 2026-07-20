@@ -11,6 +11,7 @@ import { ImportPage } from './pages/ImportPage';
 import { LibraryDashboard } from './pages/LibraryDashboard';
 import { LibraryBookDetails } from './pages/LibraryBookDetails';
 import { PDFReaderPage } from './pages/PDFReaderPage';
+import { StudyWorkspacePage } from './pages/StudyWorkspacePage';
 import About from './pages/About';
 import './App.css';
 
@@ -39,6 +40,7 @@ function App() {
           <Route path="/library/import" element={<ImportPage />} />
           <Route path="/library/:id" element={<LibraryBookDetails />} />
           <Route path="/library/:id/read" element={<PDFReaderPage />} />
+          <Route path="/library/:id/study" element={<StudyWorkspacePage />} />
           <Route path="/about" element={<About />} />
           <Route path="/detail/:bookId" element={<Home />} />
         </Routes>

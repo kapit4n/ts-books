@@ -1,0 +1,36 @@
+.highlight-overlay-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.highlight-overlay-group {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.highlight-overlay {
+  position: absolute;
+  pointer-events: auto;
+  cursor: pointer;
+  mix-blend-mode: multiply;
+  opacity: 0.35;
+  border-radius: 2px;
+  transition: opacity 0.15s ease;
+}
+
+.highlight-overlay:hover {
+  opacity: 0.55;
+}
+
+.highlight-overlay:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}

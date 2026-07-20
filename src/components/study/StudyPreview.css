@@ -1,0 +1,224 @@
+.study-preview {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.study-preview-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--text-tertiary);
+  font-size: 0.875rem;
+}
+
+.study-preview-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-md);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.study-preview-type {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.study-preview-type-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.study-preview-header-actions {
+  display: flex;
+  gap: 4px;
+}
+
+.preview-action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: none;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background-color 0.15s, color 0.15s;
+}
+
+.preview-action-btn:hover {
+  background-color: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+.preview-action-btn.favorited {
+  color: #f59e0b;
+  border-color: #f59e0b;
+}
+
+.preview-action-btn.preview-delete:hover {
+  color: #ef4444;
+  border-color: #ef4444;
+}
+
+.study-preview-content {
+  padding: var(--space-lg);
+}
+
+.preview-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 var(--space-sm) 0;
+}
+
+.preview-text {
+  font-size: 0.9375rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+.study-preview-edit {
+  padding: var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.preview-edit-title {
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  background-color: var(--bg-secondary);
+  outline: none;
+}
+
+.preview-edit-title:focus {
+  border-color: var(--color-primary);
+}
+
+.preview-edit-content {
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  font-size: 0.9375rem;
+  color: var(--text-primary);
+  background-color: var(--bg-secondary);
+  min-height: 120px;
+  resize: vertical;
+  outline: none;
+  font-family: var(--font-sans);
+}
+
+.preview-edit-content:focus {
+  border-color: var(--color-primary);
+}
+
+.preview-edit-actions {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.study-preview-meta {
+  padding: 0 var(--space-lg);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+}
+
+.preview-meta-item {
+  font-size: 0.75rem;
+  color: var(--text-tertiary);
+}
+
+.study-preview-tags {
+  padding: var(--space-md) var(--space-lg);
+  border-top: 1px solid var(--border-color);
+}
+
+.preview-tags-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: var(--space-sm);
+}
+
+.preview-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  background-color: var(--color-primary-light);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--color-primary);
+}
+
+.preview-tag button {
+  display: flex;
+  align-items: center;
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+  opacity: 0.6;
+}
+
+.preview-tag button:hover {
+  opacity: 1;
+}
+
+.preview-tag-input {
+  width: 100%;
+  padding: var(--space-xs) var(--space-sm);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  font-size: 0.8125rem;
+  color: var(--text-primary);
+  background-color: var(--bg-secondary);
+  outline: none;
+}
+
+.preview-tag-input:focus {
+  border-color: var(--color-primary);
+}
+
+.study-preview-jump {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  margin: var(--space-md) var(--space-lg);
+  padding: var(--space-sm) var(--space-md);
+  background-color: var(--color-primary);
+  color: var(--text-inverse);
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.study-preview-jump:hover {
+  background-color: var(--color-primary-hover);
+}

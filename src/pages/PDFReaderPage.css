@@ -786,6 +786,239 @@
   }
 }
 
+/* ===== Highlight Colors ===== */
+:root {
+  --highlight-yellow: #facc15;
+  --highlight-blue: #3b82f6;
+  --highlight-green: #22c55e;
+  --highlight-pink: #ec4899;
+  --highlight-orange: #f97316;
+}
+
+/* ===== Left Sidebar Tabs ===== */
+.pdf-left-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  padding: var(--space-xs) var(--space-sm);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.pdf-left-tab {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  background: none;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  transition: background-color 0.15s, color 0.15s;
+  white-space: nowrap;
+}
+
+.pdf-left-tab:hover {
+  background-color: var(--bg-tertiary);
+  color: var(--text-secondary);
+}
+
+.pdf-left-tab.active {
+  background-color: var(--color-primary-light);
+  color: var(--color-primary);
+}
+
+.pdf-tab-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  border-radius: var(--radius-full);
+  background-color: var(--bg-tertiary);
+  font-size: 0.625rem;
+  font-weight: 600;
+  color: var(--text-tertiary);
+}
+
+.pdf-left-tab.active .pdf-tab-badge {
+  background-color: var(--color-primary);
+  color: var(--text-inverse);
+}
+
+.pdf-left-tab-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-sm);
+}
+
+/* ===== Highlights List ===== */
+.pdf-highlights-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.pdf-highlight-item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-sm);
+  padding: var(--space-sm);
+  background: none;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  transition: background-color 0.15s;
+}
+
+.pdf-highlight-item:hover {
+  background-color: var(--bg-card-hover);
+}
+
+.pdf-highlight-color {
+  width: 4px;
+  min-height: 28px;
+  border-radius: 2px;
+  flex-shrink: 0;
+  align-self: stretch;
+}
+
+.pdf-highlight-text {
+  display: block;
+  font-size: 0.8125rem;
+  color: var(--text-primary);
+  line-height: 1.3;
+}
+
+.pdf-highlight-meta {
+  display: block;
+  font-size: 0.6875rem;
+  color: var(--text-tertiary);
+  margin-top: 2px;
+}
+
+.pdf-highlight-remove {
+  margin-left: auto;
+  background: none;
+  border: none;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  padding: 2px;
+  opacity: 0;
+  transition: opacity 0.15s, color 0.15s;
+}
+
+.pdf-highlight-item:hover .pdf-highlight-remove {
+  opacity: 1;
+}
+
+.pdf-highlight-remove:hover {
+  color: #ef4444;
+}
+
+/* ===== Notes List ===== */
+.pdf-notes-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.pdf-note-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--space-sm);
+  background: none;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  transition: background-color 0.15s;
+}
+
+.pdf-note-item:hover {
+  background-color: var(--bg-card-hover);
+}
+
+.pdf-note-item-title {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.pdf-note-item-content {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  line-height: 1.3;
+}
+
+.pdf-note-item-meta {
+  font-size: 0.6875rem;
+  color: var(--text-tertiary);
+}
+
+/* ===== Activity List ===== */
+.pdf-activity-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.pdf-activity-item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-sm);
+  padding: var(--space-xs) 0;
+}
+
+.pdf-activity-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--color-primary);
+  margin-top: 6px;
+  flex-shrink: 0;
+}
+
+.pdf-activity-desc {
+  display: block;
+  font-size: 0.8125rem;
+  color: var(--text-primary);
+}
+
+.pdf-activity-time {
+  display: block;
+  font-size: 0.6875rem;
+  color: var(--text-tertiary);
+}
+
+/* ===== Standard Page Wrapper ===== */
+.pdf-standard-page-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+/* ===== Study Shortcut ===== */
+.pdf-shortcut-study {
+  color: var(--color-accent);
+}
+
+.pdf-shortcut-study:hover {
+  background-color: #ede9fe;
+  color: var(--color-accent);
+}
+
+[data-theme="dark"] .pdf-shortcut-study:hover {
+  background-color: #2e1065;
+}
+
+/* ===== Responsive ===== */
 @media (max-width: 640px) {
   .pdf-toolbar {
     flex-wrap: wrap;

@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { db } from '../services/database';
 import { BookBookmark, BookProgress, ReadingPlan, ReadingMode, FitMode, ReaderPreferences } from '../types/library';
+import { SelectionContext, HighlightColor } from '../types/study';
 
 const PREFS_KEY = 'ts-books-reader-prefs';
 
@@ -44,6 +45,9 @@ interface ReaderState {
   showBookmarkForm: boolean;
   containerWidth: number;
   containerHeight: number;
+  selectionContext: SelectionContext | null;
+  showHighlightToolbar: boolean;
+  activeHighlightColor: HighlightColor;
 
   setCurrentBook: (bookId: string) => Promise<void>;
   setPage: (page: number) => void;
@@ -66,6 +70,9 @@ interface ReaderState {
   setIsFullscreen: (v: boolean) => void;
   setShowSearch: (v: boolean) => void;
   setShowBookmarkForm: (v: boolean) => void;
+  setSelectionContext: (ctx: SelectionContext | null) => void;
+  setShowHighlightToolbar: (v: boolean) => void;
+  setActiveHighlightColor: (c: HighlightColor) => void;
   loadProgress: (bookId: string) => Promise<void>;
   saveProgress: (bookId: string, page: number, totalPages: number) => Promise<void>;
   loadBookmarks: (bookId: string) => Promise<void>;
@@ -109,6 +116,9 @@ export const useReaderStore = create<ReaderState>((set, get) => ({
   showBookmarkForm: false,
   containerWidth: 0,
   containerHeight: 0,
+  selectionContext: null,
+  showHighlightToolbar: false,
+  activeHighlightColor: 'yellow',
 
   setCurrentBook: async (bookId) => {
     const prefs = loadPrefsFromStorage();
@@ -246,6 +256,12 @@ export const useReaderStore = create<ReaderState>((set, get) => ({
   setShowSearch: (v) => set({ showSearch: v }),
 
   setShowBookmarkForm: (v) => set({ showBookmarkForm: v }),
+
+  setSelectionContext: (ctx) => set({ selectionContext: ctx }),
+
+  setShowHighlightToolbar: (v) => set({ showHighlightToolbar: v }),
+
+  setActiveHighlightColor: (c) => set({ activeHighlightColor: c }),
 
   loadProgress: async (bookId) => {
     const progress = await db.progress.get(bookId);

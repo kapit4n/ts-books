@@ -36,6 +36,13 @@ export const useLibraryStore = create<LibraryState>((set, get) => ({
     await db.bookmarks.where('bookId').equals(id).delete();
     await db.progress.delete(id);
     await db.plans.where('bookId').equals(id).delete();
+    await db.highlights.where('bookId').equals(id).delete();
+    await db.notes.where('bookId').equals(id).delete();
+    await db.stickyNotes.where('bookId').equals(id).delete();
+    await db.studyBookmarks.where('bookId').equals(id).delete();
+    await db.tags.where('bookId').equals(id).delete();
+    await db.studySessions.where('bookId').equals(id).delete();
+    await db.activities.where('bookId').equals(id).delete();
     set({ books: get().books.filter((b) => b.id !== id) });
   },
 
