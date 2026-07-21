@@ -37,8 +37,13 @@ export const useUserQuizStore = create<UserQuizState>((set, get) => ({
 
   loadQuizzes: async (bookId) => {
     set({ loading: true });
-    const quizzes = await userQuizService.getByBook(bookId);
-    set({ quizzes, loading: false });
+    try {
+      const quizzes = await userQuizService.getByBook(bookId);
+      set({ quizzes, loading: false });
+    } catch (err) {
+      console.error('[Quiz] Failed to load:', err);
+      set({ loading: false });
+    }
   },
 
   createQuiz: async (quiz) => {

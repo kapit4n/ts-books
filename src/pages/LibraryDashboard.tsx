@@ -4,22 +4,42 @@ import { motion } from 'framer-motion';
 import {
   Upload, BookOpen, Clock, TrendingUp, CheckCircle2,
   Search, SlidersHorizontal, ArrowUpDown, LayoutGrid,
-  FolderPlus,
+  FolderPlus, FlaskConical,
 } from 'lucide-react';
 import { LibraryCard } from '../components/library/LibraryCard';
 import { useLibraryStore } from '../hooks/useLibrary';
 import { db } from '../services/database';
 import { BookProgress } from '../types/library';
+import { seedPythonBook } from '../utils/seedPythonBook';
 import './LibraryDashboard.css';
+
+const PYTHON_BOOK_ID = 'python-crash-course-seed';
 
 export const LibraryDashboard: React.FC = () => {
   const navigate = useNavigate();
   const { books, loadBooks, removeBook } = useLibraryStore();
   const [progressMap, setProgressMap] = useState<Record<string, BookProgress>>({});
+  const [seeding, setSeeding] = useState(false);
+  const [hasPythonBook, setHasPythonBook] = useState(false);
 
   useEffect(() => {
     loadBooks();
   }, [loadBooks]);
+
+  useEffect(() => {
+    db.books.get(PYTHON_BOOK_ID).then((b) => setHasPythonBook(!!b));
+  }, [books]);
+
+  const handleSeed = async () => {
+    setSeeding(true);
+    try {
+      await seedPythonBook();
+      await loadBooks();
+    } catch (err) {
+      console.error('Seed failed:', err);
+    }
+    setSeeding(false);
+  };
 
   useEffect(() => {
     const loadProgress = async () => {
@@ -71,6 +91,28 @@ export const LibraryDashboard: React.FC = () => {
               <Upload size={16} />
               Import PDF
             </button>
+            {!hasPythonBook && (
+              <button
+                className="library-import-btn"
+                onClick={handleSeed}
+                disabled={seeding}
+                aria-label="Seed demo data"
+                style={{ background: '#10b981', borderColor: '#10b981' }}
+              >
+                <FlaskConical size={16} />
+                {seeding ? 'Seeding...' : 'Load Demo Book'}
+              </button>
+            )}
+            {hasPythonBook && (
+              <button
+                className="library-action-btn"
+                onClick={() => navigate(`/library/${PYTHON_BOOK_ID}/learn`)}
+                style={{ background: '#10b98110', borderColor: '#10b981', color: '#10b981' }}
+              >
+                <BookOpen size={16} />
+                Learning Center
+              </button>
+            )}
           </div>
         </motion.div>
 
@@ -124,6 +166,15 @@ export const LibraryDashboard: React.FC = () => {
             >
               <Upload size={18} />
               Import PDF
+            </button>
+            <button
+              className="library-empty-import-btn"
+              onClick={handleSeed}
+              disabled={seeding}
+              style={{ background: '#10b981', color: '#fff', marginTop: '0.5rem' }}
+            >
+              <FlaskConical size={18} />
+              {seeding ? 'Seeding...' : 'Load Demo Python Book'}
             </button>
             <a href="/books" className="library-empty-browse">
               Browse Built-in Books

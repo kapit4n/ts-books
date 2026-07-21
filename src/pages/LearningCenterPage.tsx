@@ -1,6 +1,6 @@
 import React, { useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ChevronLeft, BookOpen } from 'lucide-react';
+import { ChevronLeft, BookOpen, AlertTriangle } from 'lucide-react';
 import { useLibraryStore } from '../hooks/useLibrary';
 import { useLearningCenterStore } from '../hooks/useLearningCenter';
 import { useUserFlashcardsStore } from '../hooks/useUserFlashcards';
@@ -23,10 +23,29 @@ import { AchievementGrid } from '../components/learning/AchievementGrid';
 import { LearningStatsCards } from '../components/learning/LearningStatsCards';
 import { StudyCalendar } from '../components/learning/StudyCalendar';
 import { LearningTimeline } from '../components/learning/LearningTimeline';
+import { LearningErrorBoundary } from '../components/learning/ErrorBoundary';
 import { Quiz, QuizAttempt, Exercise } from '../types/learning';
 import './LearningCenterPage.css';
 
 type LearningTab = 'overview' | 'flashcards' | 'quizzes' | 'exercises' | 'achievements' | 'statistics';
+
+const LearningCenterSkeleton: React.FC = () => (
+  <div className="learning-center-skeleton">
+    <div className="skeleton-sidebar">
+      {[1, 2, 3, 4, 5].map((i) => (
+        <div key={i} className="skeleton-sidebar-item" />
+      ))}
+    </div>
+    <div className="skeleton-main">
+      <div className="skeleton-header" />
+      <div className="skeleton-cards">
+        {[1, 2, 3].map((i) => (
+          <div key={i} className="skeleton-card" />
+        ))}
+      </div>
+    </div>
+  </div>
+);
 
 export const LearningCenterPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -34,40 +53,35 @@ export const LearningCenterPage: React.FC = () => {
   const { books } = useLibraryStore();
   const book = books.find((b) => b.id === id);
 
-  const { activeTab, setActiveTab, refreshAll, loading } = useLearningCenterStore();
+  const { activeTab, setActiveTab, refreshAll, loading, error, clearError } = useLearningCenterStore();
 
   // Flashcard sub-state
   const [flashcardView, setFlashcardView] = React.useState<'list' | 'create' | 'review' | 'detail'>('list');
 
-  const { cards, stats: flashcardStats, loadCards, addCard } = useUserFlashcardsStore();
+  const { cards, stats: flashcardStats } = useUserFlashcardsStore();
 
   // Quiz sub-state
   const [quizView, setQuizView] = React.useState<'list' | 'create' | 'play' | 'result'>('list');
   const [activeQuiz, setActiveQuiz] = React.useState<Quiz | null>(null);
   const [lastAttempt, setLastAttempt] = React.useState<QuizAttempt | null>(null);
-  const { quizzes, stats: quizStats, loadQuizzes, createQuiz } = useUserQuizStore();
+  const { quizzes, stats: quizStats } = useUserQuizStore();
 
   // Exercise sub-state
   const [exerciseView, setExerciseView] = React.useState<'list' | 'edit'>('list');
   const [selectedExercise, setSelectedExercise] = React.useState<Exercise | null>(null);
-  const { exercises, stats: exerciseStats, loadExercises, recordResult } = useExercisesStore();
+  const { exercises, stats: exerciseStats } = useExercisesStore();
 
   // Achievements
   const { stats: achievementStats } = useAchievementsStore();
 
   // Learning progress
-  const { stats: learningStats, loadStats, loadGlobalStats } = useLearningProgressStore();
+  const { stats: learningStats } = useLearningProgressStore();
 
   useEffect(() => {
     if (id) {
       refreshAll(id);
-      loadStats(id);
-      loadGlobalStats();
-      loadCards(id);
-      loadQuizzes(id);
-      loadExercises(id);
     }
-  }, [id, refreshAll, loadStats, loadGlobalStats, loadCards, loadQuizzes, loadExercises]);
+  }, [id, refreshAll]);
 
   const handleBack = useCallback(() => {
     if (id) navigate(`/library/${id}`);
@@ -84,18 +98,23 @@ export const LearningCenterPage: React.FC = () => {
     return (
       <div className="learning-center-page">
         <div className="learning-center-empty">
+          <AlertTriangle size={32} style={{ marginBottom: '0.75rem', opacity: 0.6 }} />
           <p>Book not found.</p>
+          <button className="learn-btn ghost" onClick={() => navigate('/library')}>
+            Back to Library
+          </button>
         </div>
       </div>
     );
   }
 
   const renderFlashcards = () => {
+    const addCard = useUserFlashcardsStore.getState().addCard;
     if (flashcardView === 'create') {
       return (
         <div className="learning-section">
           <FlashcardBuilder
-            bookId={book!.id}
+            bookId={book.id}
             onSave={async (cardData) => {
               await addCard(cardData);
               setFlashcardView('list');
@@ -108,7 +127,7 @@ export const LearningCenterPage: React.FC = () => {
     if (flashcardView === 'review') {
       return (
         <div className="learning-section">
-          <FlashcardReview bookId={book!.id} onComplete={() => setFlashcardView('list')} />
+          <FlashcardReview bookId={book.id} onComplete={() => setFlashcardView('list')} />
         </div>
       );
     }
@@ -117,39 +136,40 @@ export const LearningCenterPage: React.FC = () => {
         <div className="learning-section-header">
           <h2>Flashcards</h2>
           <div className="learning-section-actions">
-            <button className="learn-btn ghost" onClick={() => setFlashcardView('review')}>Review Due Cards ({flashcardStats.due})</button>
+            <button className="learn-btn ghost" onClick={() => setFlashcardView('review')}>Review Due Cards ({flashcardStats?.due ?? 0})</button>
             <button className="learn-btn primary" onClick={() => setFlashcardView('create')}>+ New Card</button>
           </div>
         </div>
         <div className="flashcard-stats-row">
-          <span>{flashcardStats.total} total</span>
-          <span>{flashcardStats.due} due</span>
-          <span>{flashcardStats.mastered} mastered</span>
+          <span>{flashcardStats?.total ?? 0} total</span>
+          <span>{flashcardStats?.due ?? 0} due</span>
+          <span>{flashcardStats?.mastered ?? 0} mastered</span>
         </div>
         <div className="learning-cards-list">
-          {cards.map(card => (
+          {(cards ?? []).map(card => (
             <FlashcardCard
               key={card.id}
               card={card}
               compact
               onEdit={() => { setFlashcardView('detail'); }}
-              onDelete={(id) => {
-                useUserFlashcardsStore.getState().removeCard(id);
+              onDelete={(cardId) => {
+                useUserFlashcardsStore.getState().removeCard(cardId);
               }}
             />
           ))}
-          {cards.length === 0 && <p className="learn-empty">No flashcards yet. Create your first card!</p>}
+          {(!cards || cards.length === 0) && <p className="learn-empty">No flashcards yet. Create your first card!</p>}
         </div>
       </div>
     );
   };
 
   const renderQuizzes = () => {
+    const createQuiz = useUserQuizStore.getState().createQuiz;
     if (quizView === 'create') {
       return (
         <div className="learning-section">
           <QuizBuilder
-            bookId={book!.id}
+            bookId={book.id}
             onSave={async (quiz) => {
               await createQuiz(quiz);
               setQuizView('list');
@@ -192,7 +212,7 @@ export const LearningCenterPage: React.FC = () => {
           <button className="learn-btn primary" onClick={() => setQuizView('create')}>+ New Quiz</button>
         </div>
         <div className="learning-cards-list">
-          {quizzes.map(quiz => (
+          {(quizzes ?? []).map(quiz => (
             <QuizCard
               key={quiz.id}
               quiz={quiz}
@@ -201,12 +221,12 @@ export const LearningCenterPage: React.FC = () => {
                 useUserQuizStore.getState().startQuiz(quiz.id);
                 setQuizView('play');
               }}
-              onDelete={(id) => {
-                useUserQuizStore.getState().removeQuiz(id);
+              onDelete={(quizId) => {
+                useUserQuizStore.getState().removeQuiz(quizId);
               }}
             />
           ))}
-          {quizzes.length === 0 && <p className="learn-empty">No quizzes yet. Create your first quiz!</p>}
+          {(!quizzes || quizzes.length === 0) && <p className="learn-empty">No quizzes yet. Create your first quiz!</p>}
         </div>
       </div>
     );
@@ -223,14 +243,14 @@ export const LearningCenterPage: React.FC = () => {
               const result = {
                 id: Date.now().toString(36),
                 exerciseId,
-                bookId: book!.id,
+                bookId: book.id,
                 userCode,
                 output,
                 passed,
                 attemptedAt: new Date().toISOString(),
               };
-              recordResult(result);
-              loadExercises(book!.id);
+              useExercisesStore.getState().recordResult(result);
+              useExercisesStore.getState().loadExercises(book.id);
             }}
           />
         </div>
@@ -242,7 +262,7 @@ export const LearningCenterPage: React.FC = () => {
           <h2>Exercises</h2>
         </div>
         <div className="learning-cards-list">
-          {exercises.map(exercise => (
+          {(exercises ?? []).map(exercise => (
             <ExerciseCard
               key={exercise.id}
               exercise={exercise}
@@ -253,7 +273,7 @@ export const LearningCenterPage: React.FC = () => {
               }}
             />
           ))}
-          {exercises.length === 0 && <p className="learn-empty">No exercises yet.</p>}
+          {(!exercises || exercises.length === 0) && <p className="learn-empty">No exercises yet.</p>}
         </div>
       </div>
     );
@@ -267,7 +287,7 @@ export const LearningCenterPage: React.FC = () => {
       {learningStats && <LearningStatsCards stats={learningStats} />}
       <div className="learning-stats-bottom">
         <StudyCalendar />
-        <LearningTimeline bookId={book!.id} limit={20} />
+        <LearningTimeline bookId={book.id} limit={20} />
       </div>
     </div>
   );
@@ -277,7 +297,7 @@ export const LearningCenterPage: React.FC = () => {
       case 'overview':
         return (
           <LearningOverview
-            bookId={book!.id}
+            bookId={book.id}
             onNavigate={(bid, activity) => {
               if (activity === 'flashcards') { setActiveTab('flashcards'); setFlashcardView('list'); }
               else if (activity === 'quiz') { setActiveTab('quizzes'); setQuizView('list'); }
@@ -307,47 +327,57 @@ export const LearningCenterPage: React.FC = () => {
   };
 
   return (
-    <div className="learning-center-page">
-      <header className="learning-center-header">
-        <button className="study-back-btn" onClick={handleBack}>
-          <ChevronLeft size={18} /> Back
-        </button>
-        <div className="learning-center-header-info">
-          <h1 className="learning-center-title">{book.title}</h1>
-          <span className="learning-center-subtitle">
-            <BookOpen size={14} /> Learning Center
-          </span>
+    <LearningErrorBoundary>
+      <div className="learning-center-page">
+        <header className="learning-center-header">
+          <button className="study-back-btn" onClick={handleBack}>
+            <ChevronLeft size={18} /> Back
+          </button>
+          <div className="learning-center-header-info">
+            <h1 className="learning-center-title">{book.title}</h1>
+            <span className="learning-center-subtitle">
+              <BookOpen size={14} /> Learning Center
+            </span>
+          </div>
+          <button
+            className="study-read-btn"
+            onClick={() => navigate(`/library/${book.id}/read`)}
+          >
+            Open Reader
+          </button>
+        </header>
+
+        {error && (
+          <div className="learning-center-error">
+            <AlertTriangle size={16} />
+            <span>{error}</span>
+            <button onClick={clearError}>&times;</button>
+          </div>
+        )}
+
+        <div className="learning-center-layout">
+          <aside className="learning-center-sidebar">
+            <LearningCenterSidebar
+              activeTab={activeTab}
+              onTabChange={handleTabChange}
+              stats={{
+                flashcards: flashcardStats?.total ?? 0,
+                quizzes: quizStats?.total ?? 0,
+                exercises: exerciseStats?.total ?? 0,
+                achievements: achievementStats?.unlocked ?? 0,
+              }}
+            />
+          </aside>
+
+          <main className="learning-center-main">
+            {loading ? (
+              <LearningCenterSkeleton />
+            ) : (
+              renderContent()
+            )}
+          </main>
         </div>
-        <button
-          className="study-read-btn"
-          onClick={() => navigate(`/library/${book.id}/read`)}
-        >
-          Open Reader
-        </button>
-      </header>
-
-      <div className="learning-center-layout">
-        <aside className="learning-center-sidebar">
-          <LearningCenterSidebar
-            activeTab={activeTab}
-            onTabChange={handleTabChange}
-            stats={{
-              flashcards: flashcardStats.total,
-              quizzes: quizStats.total,
-              exercises: exerciseStats.total,
-              achievements: achievementStats.unlocked,
-            }}
-          />
-        </aside>
-
-        <main className="learning-center-main">
-          {loading ? (
-            <p className="learn-loading">Loading...</p>
-          ) : (
-            renderContent()
-          )}
-        </main>
       </div>
-    </div>
+    </LearningErrorBoundary>
   );
 };

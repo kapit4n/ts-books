@@ -21,9 +21,14 @@ export const useChapterProgressStore = create<ChapterProgressState>((set, get) =
 
   loadChapters: async (bookId) => {
     set({ loading: true });
-    const chapters = await chapterProgressService.getByBook(bookId);
-    const completionPercentage = await chapterProgressService.getCompletionPercentage(bookId);
-    set({ chapters, completionPercentage, loading: false });
+    try {
+      const chapters = await chapterProgressService.getByBook(bookId);
+      const completionPercentage = await chapterProgressService.getCompletionPercentage(bookId);
+      set({ chapters, completionPercentage, loading: false });
+    } catch (err) {
+      console.error('[ChapterProgress] Failed to load:', err);
+      set({ loading: false });
+    }
   },
 
   markChapter: async (id, status) => {

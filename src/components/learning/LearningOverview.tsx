@@ -19,16 +19,15 @@ export const LearningOverview: React.FC<LearningOverviewProps> = ({
   onNavigate,
   onTabChange,
 }) => {
-  const { overview, loading, loadOverview } = useLearningCenterStore();
+  const { overview } = useLearningCenterStore();
   const { refreshStreak } = useStudyCalendarStore();
   const { markChapter } = useChapterProgressStore();
 
   useEffect(() => {
-    loadOverview(bookId);
     refreshStreak();
-  }, [bookId, loadOverview, refreshStreak]);
+  }, [refreshStreak]);
 
-  if (loading || !overview) {
+  if (!overview) {
     return <p className="learn-loading">Loading overview...</p>;
   }
 

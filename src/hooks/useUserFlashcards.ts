@@ -33,14 +33,24 @@ export const useUserFlashcardsStore = create<UserFlashcardsState>((set, get) => 
 
   loadCards: async (bookId) => {
     set({ loading: true });
-    const cards = await userFlashcardService.getByBook(bookId);
-    set({ cards, loading: false });
+    try {
+      const cards = await userFlashcardService.getByBook(bookId);
+      set({ cards, loading: false });
+    } catch (err) {
+      console.error('[Flashcards] Failed to load:', err);
+      set({ loading: false });
+    }
   },
 
   loadDueCards: async (bookId) => {
     set({ loading: true });
-    const dueCards = await userFlashcardService.getDueCards(bookId);
-    set({ dueCards, loading: false, activeStudyIndex: 0, showAnswer: false });
+    try {
+      const dueCards = await userFlashcardService.getDueCards(bookId);
+      set({ dueCards, loading: false, activeStudyIndex: 0, showAnswer: false });
+    } catch (err) {
+      console.error('[Flashcards] Failed to load due cards:', err);
+      set({ loading: false });
+    }
   },
 
   addCard: async (cardData) => {

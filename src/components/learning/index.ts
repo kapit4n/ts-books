@@ -19,3 +19,4 @@ export { ContinueLearning } from './ContinueLearning';
 export { LearningStatsCards } from './LearningStatsCards';
 export { LearningCenterSidebar } from './LearningCenterSidebar';
 export { LearningOverview } from './LearningOverview';
+export { LearningErrorBoundary } from './ErrorBoundary';

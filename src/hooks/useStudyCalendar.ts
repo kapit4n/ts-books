@@ -29,16 +29,25 @@ export const useStudyCalendarStore = create<StudyCalendarState>((set, get) => ({
 
   loadEntries: async (bookId) => {
     set({ loading: true });
-    const entries = await studyCalendarService.getByBook(bookId);
-    set({ entries, loading: false });
+    try {
+      const entries = await studyCalendarService.getByBook(bookId);
+      set({ entries, loading: false });
+    } catch (err) {
+      console.error('[StudyCalendar] Failed to load entries:', err);
+      set({ loading: false });
+    }
   },
 
   loadMonthEntries: async (year, month) => {
-    const startDate = `${year}-${String(month + 1).padStart(2, '0')}-01`;
-    const lastDay = new Date(year, month + 1, 0).getDate();
-    const endDate = `${year}-${String(month + 1).padStart(2, '0')}-${String(lastDay).padStart(2, '0')}`;
-    const monthEntries = await studyCalendarService.getByDateRange(startDate, endDate);
-    set({ monthEntries });
+    try {
+      const startDate = `${year}-${String(month + 1).padStart(2, '0')}-01`;
+      const lastDay = new Date(year, month + 1, 0).getDate();
+      const endDate = `${year}-${String(month + 1).padStart(2, '0')}-${String(lastDay).padStart(2, '0')}`;
+      const monthEntries = await studyCalendarService.getByDateRange(startDate, endDate);
+      set({ monthEntries });
+    } catch (err) {
+      console.error('[StudyCalendar] Failed to load month entries:', err);
+    }
   },
 
   logEntry: async (entry) => {
@@ -57,13 +66,21 @@ export const useStudyCalendarStore = create<StudyCalendarState>((set, get) => ({
   },
 
   refreshStreak: async () => {
-    const streak = await studyCalendarService.getStreak();
-    set({ streak });
+    try {
+      const streak = await studyCalendarService.getStreak();
+      set({ streak });
+    } catch (err) {
+      console.error('[StudyCalendar] Failed to refresh streak:', err);
+    }
   },
 
   refreshWeekTime: async () => {
-    const weekTimeMs = await studyCalendarService.getTotalTimeThisWeek();
-    set({ weekTimeMs });
+    try {
+      const weekTimeMs = await studyCalendarService.getTotalTimeThisWeek();
+      set({ weekTimeMs });
+    } catch (err) {
+      console.error('[StudyCalendar] Failed to refresh week time:', err);
+    }
   },
 
   setSelectedDate: (date) => set({ selectedDate: date }),

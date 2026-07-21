@@ -29,8 +29,13 @@ export const useExercisesStore = create<ExercisesState>((set, get) => ({
 
   loadExercises: async (bookId) => {
     set({ loading: true });
-    const exercises = await exerciseService.getByBook(bookId);
-    set({ exercises, loading: false });
+    try {
+      const exercises = await exerciseService.getByBook(bookId);
+      set({ exercises, loading: false });
+    } catch (err) {
+      console.error('[Exercises] Failed to load:', err);
+      set({ loading: false });
+    }
   },
 
   createExercise: async (exercise) => {

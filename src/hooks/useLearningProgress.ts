@@ -18,19 +18,34 @@ export const useLearningProgressStore = create<LearningProgressState>((set) => (
 
   loadStats: async (bookId) => {
     set({ loading: true });
-    const stats = await learningStatsService.getOrCreate(bookId);
-    set({ stats, loading: false });
+    try {
+      const stats = await learningStatsService.getOrCreate(bookId);
+      set({ stats, loading: false });
+    } catch (err) {
+      console.error('[LearningProgress] Failed to load stats:', err);
+      set({ loading: false });
+    }
   },
 
   loadGlobalStats: async () => {
     set({ loading: true });
-    const globalStats = await learningStatsService.getGlobalStats();
-    set({ globalStats, loading: false });
+    try {
+      const globalStats = await learningStatsService.getGlobalStats();
+      set({ globalStats, loading: false });
+    } catch (err) {
+      console.error('[LearningProgress] Failed to load global stats:', err);
+      set({ loading: false });
+    }
   },
 
   refreshStats: async (bookId) => {
     set({ loading: true });
-    const stats = await learningStatsService.refreshStats(bookId);
-    set({ stats, loading: false });
+    try {
+      const stats = await learningStatsService.refreshStats(bookId);
+      set({ stats, loading: false });
+    } catch (err) {
+      console.error('[LearningProgress] Failed to refresh stats:', err);
+      set({ loading: false });
+    }
   },
 }));

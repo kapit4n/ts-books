@@ -22,12 +22,17 @@ export const useAchievementsStore = create<AchievementsState>((set, get) => ({
 
   loadAchievements: async () => {
     set({ loading: true });
-    const [definitions, unlocked, stats] = await Promise.all([
-      achievementService.getDefinitions(),
-      achievementService.getUnlocked(),
-      achievementService.getStats(),
-    ]);
-    set({ definitions, unlocked, stats, loading: false });
+    try {
+      const [definitions, unlocked, stats] = await Promise.all([
+        achievementService.getDefinitions(),
+        achievementService.getUnlocked(),
+        achievementService.getStats(),
+      ]);
+      set({ definitions, unlocked, stats, loading: false });
+    } catch (err) {
+      console.error('[Achievements] Failed to load:', err);
+      set({ loading: false });
+    }
   },
 
   checkAndUnlock: async () => {
