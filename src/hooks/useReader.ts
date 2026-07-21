@@ -36,7 +36,7 @@ interface ReaderState {
   readingMode: ReadingMode;
   columnSide: 'left' | 'right';
   sidebarsOpen: { left: boolean; right: boolean };
-  rightTab: 'bookmarks' | 'notes' | 'progress' | 'settings';
+  rightTab: 'bookmarks' | 'notes' | 'progress' | 'settings' | 'ai';
   progress: BookProgress | null;
   bookmarks: BookBookmark[];
   plan: ReadingPlan | null;

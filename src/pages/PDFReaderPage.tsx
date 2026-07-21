@@ -8,7 +8,7 @@ import {
   Bookmark, BarChart3, Settings, BookOpen, Upload,
   Maximize, Minimize, Moon, Columns, Focus, FileText,
   Highlighter, StickyNote as StickyNoteIcon, List, Activity,
-  GraduationCap,
+  GraduationCap, Sparkles,
 } from 'lucide-react';
 import { useLibraryStore } from '../hooks/useLibrary';
 import { useReaderStore, computeFitScale } from '../hooks/useReader';
@@ -23,6 +23,10 @@ import { Button } from '../components/ui/Button';
 import { HighlightToolbar } from '../components/reader/HighlightToolbar';
 import { HighlightOverlay } from '../components/reader/HighlightOverlay';
 import { StickyNote as StickyNoteComponent } from '../components/reader/StickyNote';
+import { AIPanel } from '../components/ai/AIPanel';
+import { PromptToolbar } from '../components/ai/PromptToolbar';
+import { AIPromptTemplate } from '../types/ai';
+import { buildPrompt } from '../services/promptBuilder';
 import './PDFReaderPage.css';
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
@@ -76,6 +80,9 @@ export const PDFReaderPage: React.FC = () => {
   const [pageInput, setPageInput] = useState(String(currentPage));
   const [toolbarHidden, setToolbarHidden] = useState(false);
   const [leftTab, setLeftTab] = useState<LeftTab>('outline');
+  const [showPromptToolbar, setShowPromptToolbar] = useState(false);
+  const [promptToolbarPos, setPromptToolbarPos] = useState({ x: 0, y: 0 });
+  const [selectedTextForAI, setSelectedTextForAI] = useState<string | undefined>();
   const containerRef = useRef<HTMLDivElement>(null);
   const viewerWrapperRef = useRef<HTMLDivElement>(null);
   const toolbarTimerRef = useRef<ReturnType<typeof setTimeout>>();
@@ -259,7 +266,7 @@ export const PDFReaderPage: React.FC = () => {
           break;
         case 'Escape':
           if (isFocusMode) toggleFocusMode();
-          else { setShowBookmarkForm(false); setShowZoomDropdown(false); setShowHighlightToolbar(false); setSelectionContext(null); }
+          else { setShowBookmarkForm(false); setShowZoomDropdown(false); setShowHighlightToolbar(false); setShowPromptToolbar(false); setSelectionContext(null); setSelectedTextForAI(undefined); }
           break;
       }
     };
@@ -337,6 +344,12 @@ export const PDFReaderPage: React.FC = () => {
       rects: positionRects,
     });
     setShowHighlightToolbar(true);
+
+    // Show prompt toolbar for AI
+    const promptX = Math.max(0, toolbarX);
+    const promptY = Math.max(0, toolbarY + 44);
+    setPromptToolbarPos({ x: promptX, y: promptY });
+    setShowPromptToolbar(true);
   }, [currentPage, isColumnMode, setSelectionContext, setShowHighlightToolbar]);
 
   useEffect(() => {
@@ -363,6 +376,7 @@ export const PDFReaderPage: React.FC = () => {
     };
     await addHighlight(highlight);
     setShowHighlightToolbar(false);
+    setShowPromptToolbar(false);
     setSelectionContext(null);
     window.getSelection()?.removeAllRanges();
   }, [id, selectionContext, addHighlight, setShowHighlightToolbar, setSelectionContext]);
@@ -403,6 +417,7 @@ export const PDFReaderPage: React.FC = () => {
     await addHighlight(highlight);
     await addNote(note);
     setShowHighlightToolbar(false);
+    setShowPromptToolbar(false);
     setSelectionContext(null);
     window.getSelection()?.removeAllRanges();
     // Switch to notes tab in left sidebar
@@ -415,6 +430,7 @@ export const PDFReaderPage: React.FC = () => {
       navigator.clipboard.writeText(selectionContext.selectedText);
     }
     setShowHighlightToolbar(false);
+    setShowPromptToolbar(false);
     setSelectionContext(null);
     window.getSelection()?.removeAllRanges();
   }, [selectionContext, setShowHighlightToolbar, setSelectionContext]);
@@ -436,6 +452,7 @@ export const PDFReaderPage: React.FC = () => {
     };
     await addHighlight(highlight);
     setShowHighlightToolbar(false);
+    setShowPromptToolbar(false);
     setSelectionContext(null);
     window.getSelection()?.removeAllRanges();
   }, [id, selectionContext, activeHighlightColor, addHighlight, setShowHighlightToolbar, setSelectionContext]);
@@ -455,6 +472,17 @@ export const PDFReaderPage: React.FC = () => {
     };
     addStickyNote(sticky);
   }, [id, currentPage, addStickyNote]);
+
+  const handleApplyPromptTemplate = useCallback((template: AIPromptTemplate, text: string) => {
+    const prompt = buildPrompt(template, text);
+    setSelectedTextForAI(prompt);
+    setShowPromptToolbar(false);
+    setSelectionContext(null);
+    window.getSelection()?.removeAllRanges();
+    // Open AI tab in right sidebar
+    setRightTab('ai');
+    if (!sidebarsOpen.right) toggleRightSidebar();
+  }, [setRightTab, sidebarsOpen.right, toggleRightSidebar, setSelectionContext]);
 
   // Current page highlights for overlay
   const currentPageHighlights = useMemo(() => {
@@ -878,6 +906,17 @@ export const PDFReaderPage: React.FC = () => {
             onCopy={handleCopySelection}
             onFavorite={handleFavoriteSelection}
           />
+
+          {/* Prompt Toolbar for AI actions */}
+          {showPromptToolbar && selectionContext && (
+            <div style={{ position: 'absolute', left: promptToolbarPos.x, top: promptToolbarPos.y, zIndex: 150 }}>
+              <PromptToolbar
+                selectedText={selectionContext.selectedText}
+                onApplyTemplate={handleApplyPromptTemplate}
+                onClose={() => { setShowPromptToolbar(false); }}
+              />
+            </div>
+          )}
         </div>
       </main>
 
@@ -890,6 +929,7 @@ export const PDFReaderPage: React.FC = () => {
           <div className="pdf-right-tabs">
             <button className={`pdf-right-tab ${rightTab === 'progress' ? 'active' : ''}`} onClick={() => setRightTab('progress')}><BarChart3 size={16} /> Progress</button>
             <button className={`pdf-right-tab ${rightTab === 'bookmarks' ? 'active' : ''}`} onClick={() => setRightTab('bookmarks')}><Bookmark size={16} /> Bookmarks</button>
+            <button className={`pdf-right-tab ${rightTab === 'ai' ? 'active' : ''}`} onClick={() => setRightTab('ai')}><Sparkles size={16} /> AI</button>
             <button className={`pdf-right-tab ${rightTab === 'settings' ? 'active' : ''}`} onClick={() => setRightTab('settings')}><Settings size={16} /> Settings</button>
           </div>
           <div className="pdf-right-content">
@@ -917,6 +957,15 @@ export const PDFReaderPage: React.FC = () => {
                   </div>
                 ))}
                 {bookmarks.length === 0 && <p className="pdf-empty-text">No bookmarks yet.</p>}
+              </div>
+            )}
+            {rightTab === 'ai' && id && (
+              <div className="pdf-ai-panel" style={{ height: '100%' }}>
+                <AIPanel
+                  bookId={id}
+                  selectionText={selectedTextForAI}
+                  onClearSelection={() => setSelectedTextForAI(undefined)}
+                />
               </div>
             )}
             {rightTab === 'settings' && (

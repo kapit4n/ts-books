@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Play, Clock, BookOpen, Calendar, Bookmark, Share2, Trash2, GraduationCap } from 'lucide-react';
+import { Play, Clock, BookOpen, Calendar, Bookmark, Share2, Trash2, GraduationCap, Brain } from 'lucide-react';
 import { useLibraryStore } from '../hooks/useLibrary';
 import { db } from '../services/database';
 import { Breadcrumb } from '../components/ui/Breadcrumb';
@@ -94,6 +94,10 @@ export const LibraryBookDetails: React.FC = () => {
               <Button variant="secondary" size="lg" onClick={() => navigate(`/library/${book.id}/study`)}>
                 <GraduationCap size={18} />
                 Study Workspace
+              </Button>
+              <Button variant="secondary" size="lg" onClick={() => navigate(`/library/${book.id}/learn`)}>
+                <Brain size={18} />
+                Learning Center
               </Button>
               <Button variant="secondary" size="lg">
                 <Bookmark size={18} />
