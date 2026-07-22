@@ -2,6 +2,7 @@ import React, { useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ChevronLeft, BookOpen, AlertTriangle } from 'lucide-react';
 import { useLibraryStore } from '../hooks/useLibrary';
+import { ImportedBook } from '../types/library';
 import { useLearningCenterStore } from '../hooks/useLearningCenter';
 import { useUserFlashcardsStore } from '../hooks/useUserFlashcards';
 import { useUserQuizStore } from '../hooks/useUserQuiz';
@@ -50,8 +51,20 @@ const LearningCenterSkeleton: React.FC = () => (
 export const LearningCenterPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { books } = useLibraryStore();
-  const book = books.find((b) => b.id === id);
+  const { books, ensureBookLoaded } = useLibraryStore();
+  const [resolvedBook, setResolvedBook] = React.useState<ImportedBook | null>(null);
+  const [bookLoading, setBookLoading] = React.useState(true);
+
+  const book = books.find((b) => b.id === id) ?? resolvedBook;
+
+  React.useEffect(() => {
+    if (!id) { setBookLoading(false); return; }
+    if (books.find((b) => b.id === id)) { setBookLoading(false); return; }
+    ensureBookLoaded(id).then((b) => {
+      setResolvedBook(b ?? null);
+      setBookLoading(false);
+    });
+  }, [id, books, ensureBookLoaded]);
 
   const { activeTab, setActiveTab, refreshAll, loading, error, clearError } = useLearningCenterStore();
 
@@ -93,6 +106,14 @@ export const LearningCenterPage: React.FC = () => {
     setQuizView('list');
     setExerciseView('list');
   }, [setActiveTab]);
+
+  if (bookLoading) {
+    return (
+      <div className="learning-center-page">
+        <LearningCenterSkeleton />
+      </div>
+    );
+  }
 
   if (!book) {
     return (

@@ -168,6 +168,7 @@ export interface StudyCalendarEntry {
 }
 
 export interface LearningStats {
+  id: string;
   bookId: string;
   totalFlashcards: number;
   masteredFlashcards: number;
@@ -201,6 +202,7 @@ export interface GlobalLearningStats {
 }
 
 export interface ContinueLearningState {
+  id: string;
   bookId: string;
   lastActivity: CalendarEntryType;
   lastFlashcardId?: string;

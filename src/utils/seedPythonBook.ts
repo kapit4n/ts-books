@@ -156,6 +156,7 @@ const studyCalendarEntries: StudyCalendarEntry[] = (() => {
 })();
 
 const learningStats: LearningStats = {
+  id: PYTHON_BOOK_ID,
   bookId: PYTHON_BOOK_ID,
   totalFlashcards: 12,
   masteredFlashcards: 4,
@@ -172,6 +173,7 @@ const learningStats: LearningStats = {
 };
 
 const continueLearning: ContinueLearningState = {
+  id: PYTHON_BOOK_ID,
   bookId: PYTHON_BOOK_ID,
   lastActivity: 'exercise',
   lastExerciseId: 'ex-4',

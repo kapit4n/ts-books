@@ -7,6 +7,7 @@ interface LibraryState {
   importJobs: ImportJob[];
   loading: boolean;
   loadBooks: () => Promise<void>;
+  ensureBookLoaded: (id: string) => Promise<ImportedBook | undefined>;
   addBook: (book: ImportedBook) => Promise<void>;
   removeBook: (id: string) => Promise<void>;
   updateBook: (id: string, updates: Partial<ImportedBook>) => Promise<void>;
@@ -24,6 +25,16 @@ export const useLibraryStore = create<LibraryState>((set, get) => ({
     set({ loading: true });
     const books = await db.books.toArray();
     set({ books, loading: false });
+  },
+
+  ensureBookLoaded: async (id: string) => {
+    const existing = get().books.find((b) => b.id === id);
+    if (existing) return existing;
+    const book = await db.books.get(id);
+    if (book) {
+      set({ books: [...get().books, book] });
+    }
+    return book;
   },
 
   addBook: async (book) => {

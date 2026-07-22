@@ -11,6 +11,7 @@ import {
   GraduationCap, Sparkles,
 } from 'lucide-react';
 import { useLibraryStore } from '../hooks/useLibrary';
+import { ImportedBook } from '../types/library';
 import { useReaderStore, computeFitScale } from '../hooks/useReader';
 import { useHighlightsStore } from '../hooks/useHighlights';
 import { useNotesStore } from '../hooks/useNotes';
@@ -43,7 +44,7 @@ export const PDFReaderPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { books } = useLibraryStore();
+  const { books, ensureBookLoaded } = useLibraryStore();
   const store = useReaderStore();
   const {
     currentPage, zoom, fitMode, readingMode, columnSide, sidebarsOpen, rightTab,
@@ -72,7 +73,18 @@ export const PDFReaderPage: React.FC = () => {
 
   const { activities, loadActivities } = useStudyWorkspaceStore();
 
-  const book = books.find((b) => b.id === id);
+  const [resolvedBook, setResolvedBook] = React.useState<ImportedBook | null>(null);
+  const [bookLoading, setBookLoading] = useState(true);
+  const book = books.find((b) => b.id === id) ?? resolvedBook;
+
+  React.useEffect(() => {
+    if (!id) { setBookLoading(false); return; }
+    if (books.find((b) => b.id === id)) { setBookLoading(false); return; }
+    ensureBookLoaded(id).then((b) => {
+      setResolvedBook(b ?? null);
+      setBookLoading(false);
+    });
+  }, [id, books, ensureBookLoaded]);
   const [numPages, setNumPages] = useState(0);
   const [showBookmarkForm, setShowBookmarkForm] = useState(false);
   const [bookmarkTitle, setBookmarkTitle] = useState('');
@@ -579,6 +591,16 @@ export const PDFReaderPage: React.FC = () => {
       {count !== undefined && count > 0 && <span className="pdf-tab-badge">{count}</span>}
     </button>
   );
+
+  if (bookLoading) {
+    return (
+      <div className="pdf-reader-page">
+        <div className="pdf-reader-center">
+          <div className="pdf-loading"><p>Loading...</p></div>
+        </div>
+      </div>
+    );
+  }
 
   if (!book) {
     return (

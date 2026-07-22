@@ -7,7 +7,9 @@ export const learningStatsService = {
   async getOrCreate(bookId: string): Promise<LearningStats> {
     const existing = await db.learningStats.get(bookId);
     if (existing) return existing;
+    const id = bookId;
     const stats: LearningStats = {
+      id,
       bookId,
       totalFlashcards: 0,
       masteredFlashcards: 0,

@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Play, Clock, BookOpen, Calendar, Bookmark, Share2, Trash2, GraduationCap, Brain } from 'lucide-react';
 import { useLibraryStore } from '../hooks/useLibrary';
+import { ImportedBook } from '../types/library';
 import { db } from '../services/database';
 import { Breadcrumb } from '../components/ui/Breadcrumb';
 import { ProgressBar } from '../components/ui/ProgressBar';
@@ -14,11 +15,22 @@ import './LibraryBookDetails.css';
 export const LibraryBookDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { books, removeBook } = useLibraryStore();
-  const book = books.find((b) => b.id === id);
+  const { books, removeBook, ensureBookLoaded } = useLibraryStore();
+  const [resolvedBook, setResolvedBook] = React.useState<ImportedBook | null>(null);
+  const [bookLoading, setBookLoading] = useState(true);
+  const book = books.find((b) => b.id === id) ?? resolvedBook;
   const [progress, setProgress] = useState<BookProgress | null>(null);
   const [bookmarks, setBookmarks] = useState<BookBookmark[]>([]);
   const [plan, setPlan] = useState<ReadingPlan | null>(null);
+
+  useEffect(() => {
+    if (!id) { setBookLoading(false); return; }
+    if (books.find((b) => b.id === id)) { setBookLoading(false); return; }
+    ensureBookLoaded(id).then((b) => {
+      setResolvedBook(b ?? null);
+      setBookLoading(false);
+    });
+  }, [id, books, ensureBookLoaded]);
 
   useEffect(() => {
     if (!id) return;
@@ -32,6 +44,14 @@ export const LibraryBookDetails: React.FC = () => {
     };
     load();
   }, [id]);
+
+  if (bookLoading) {
+    return (
+      <div className="library-details-page">
+        <div className="library-details-container"><p>Loading...</p></div>
+      </div>
+    );
+  }
 
   if (!book) {
     return (

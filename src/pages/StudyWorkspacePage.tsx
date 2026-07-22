@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import { ChevronLeft, BarChart3, Clock } from 'lucide-react';
 import { useLibraryStore } from '../hooks/useLibrary';
+import { ImportedBook } from '../types/library';
 import { useHighlightsStore } from '../hooks/useHighlights';
 import { useNotesStore } from '../hooks/useNotes';
 import { useStudyBookmarksStore } from '../hooks/useStudyBookmarks';
@@ -22,8 +23,20 @@ type SidebarSection = 'highlights' | 'notes' | 'bookmarks' | 'favorites' | 'tags
 export const StudyWorkspacePage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { books } = useLibraryStore();
-  const book = books.find((b) => b.id === id);
+  const { books, ensureBookLoaded } = useLibraryStore();
+  const [resolvedBook, setResolvedBook] = React.useState<ImportedBook | null>(null);
+  const [bookLoading, setBookLoading] = useState(true);
+
+  const book = books.find((b) => b.id === id) ?? resolvedBook;
+
+  useEffect(() => {
+    if (!id) { setBookLoading(false); return; }
+    if (books.find((b) => b.id === id)) { setBookLoading(false); return; }
+    ensureBookLoaded(id).then((b) => {
+      setResolvedBook(b ?? null);
+      setBookLoading(false);
+    });
+  }, [id, books, ensureBookLoaded]);
 
   const { highlights, loadHighlights, toggleFavorite: toggleHighlightFav, removeHighlight } = useHighlightsStore();
   const { notes, loadNotes, toggleFavorite: toggleNoteFav, removeNote } = useNotesStore();
@@ -125,6 +138,14 @@ export const StudyWorkspacePage: React.FC = () => {
     if (b) { await removeBookmark(annotationId); }
     if (selectedAnnotation?.id === annotationId) setSelectedAnnotation(null);
   }, [highlights, notes, bookmarks, removeHighlight, removeNote, removeBookmark, selectedAnnotation]);
+
+  if (bookLoading) {
+    return (
+      <div className="study-workspace-page">
+        <div className="study-workspace-loading"><p>Loading...</p></div>
+      </div>
+    );
+  }
 
   if (!book) {
     return (

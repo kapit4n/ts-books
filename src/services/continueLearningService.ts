@@ -11,6 +11,7 @@ export const continueLearningService = {
       await db.continueLearning.update(bookId, { ...updates, updatedAt: new Date().toISOString() });
     } else {
       const state: ContinueLearningState = {
+        id: bookId,
         bookId,
         lastActivity: updates.lastActivity || 'reading',
         ...updates,
