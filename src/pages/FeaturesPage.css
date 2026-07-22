@@ -1,0 +1,15 @@
+.features-page {
+  padding: var(--space-3xl) var(--space-xl);
+  min-height: 70vh;
+}
+
+.features-page-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+@media (max-width: 480px) {
+  .features-page {
+    padding: var(--space-2xl) var(--space-md);
+  }
+}

@@ -36,6 +36,7 @@ export const Navbar: React.FC<NavbarProps> = ({ isDarkMode, onToggleDarkMode }) 
           <a href="/library" className="navbar-link">Library</a>
           <a href="/#categories" className="navbar-link">Categories</a>
           <a href="/books" className="navbar-link">Explore</a>
+          <a href="/features" className="navbar-link">Features</a>
         </div>
 
         <div className="navbar-right">
@@ -84,6 +85,7 @@ export const Navbar: React.FC<NavbarProps> = ({ isDarkMode, onToggleDarkMode }) 
             <a href="/library" className="navbar-mobile-link">Library</a>
             <a href="/#categories" className="navbar-mobile-link">Categories</a>
             <a href="/books" className="navbar-mobile-link">Explore</a>
+            <a href="/features" className="navbar-mobile-link">Features</a>
             <a href="/library/import" className="navbar-mobile-link navbar-mobile-import">
               <Upload size={16} />
               Import PDF
